@@ -136,16 +136,19 @@ void Macro::updateInfo(PlayLayer* pl) {
 void Macro::updateTPS() {
     auto& g = Global::get();
 
-    if (g.state != state::none && !g.macro.inputs.empty()) {
+    const bool playingMacro = (g.state != state::none && !g.macro.inputs.empty());
+
+    if (playingMacro) {
         if (g.previousTps == 0.f) {
             g.previousTpsEnabled = g.tpsEnabled;
             g.previousTps = g.tps > 0.f ? g.tps : 240.f;
         }
 
-        g.tpsEnabled = g.macro.framerate != 240.f;
-        if (g.tpsEnabled) g.tps = g.macro.framerate;
-    }
-    else if (g.previousTps != 0.f) {
+        if (g.macro.framerate > 0.f && g.macro.framerate != 240.f) {
+            g.tpsEnabled = true;
+            g.tps = g.macro.framerate;
+        }
+    } else if (g.previousTps != 0.f) {
         g.tpsEnabled = g.previousTpsEnabled;
         g.tps = g.previousTps;
         g.previousTps = 0.f;
