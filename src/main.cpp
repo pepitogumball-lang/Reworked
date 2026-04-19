@@ -148,6 +148,10 @@ class $modify(PlayLayer) {
             g.checkpoints.clear();
 
             g.macro.framerate = 240.f;
+            g.tpsEnabled = false;
+            g.tps = 240.f;
+            g.mod->setSavedValue("macro_tps", 240.f);
+            g.mod->setSavedValue("macro_tps_enabled", false);
             if (g.layer) static_cast<RecordLayer*>(g.layer)->updateTPS();
 
             PlayerData p1Data = PlayerPracticeFixes::saveData(m_player1);
@@ -356,7 +360,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
             PlayerObject* p1 = m_player1;
             PlayerObject* p2 = m_player2;
 
-            if (!p1Dead && fix.p1.pos.x != 0.f && fix.p1.pos.y != 0.f) {
+            if (!p1Dead && (fix.p1.pos.x != 0.f || fix.p1.pos.y != 0.f)) {
                 cocos2d::CCPoint curPos = p1->getPosition();
                 float dist = std::hypot(fix.p1.pos.x - curPos.x, fix.p1.pos.y - curPos.y);
                 if (dist < 300.f)
@@ -367,7 +371,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
                 p1->setRotation(fix.p1.rotation);
 
             if (dualMode && !p2Dead && p2) {
-                if (fix.p2.pos.x != 0.f && fix.p2.pos.y != 0.f) {
+                if (fix.p2.pos.x != 0.f || fix.p2.pos.y != 0.f) {
                     cocos2d::CCPoint curPos = p2->getPosition();
                     float dist = std::hypot(fix.p2.pos.x - curPos.x, fix.p2.pos.y - curPos.y);
                     if (dist < 300.f)
