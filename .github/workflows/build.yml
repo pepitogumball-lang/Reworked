@@ -18,9 +18,6 @@ jobs:
       fail-fast: false
       matrix:
         config:
-          - target: Win64
-          - target: MacIntel
-          - target: MacArm
           - target: Android64
           - target: Android32
 
@@ -29,34 +26,32 @@ jobs:
 
       - name: Build the mod
         uses: geode-sdk/build-geode-mod@main
+        id: build
         with:
-          sdk: v5.6.1
+          sdk: given
           target: ${{ matrix.config.target }}
-          build-config: RelWithDebInfo
+          combine: true
 
-      - name: Upload artifact
+      - name: Upload artifacts
         uses: actions/upload-artifact@v4
         with:
           name: ${{ matrix.config.target }}-build
-          path: build/*.geode
-          if-no-files-found: warn
+          path: ${{ steps.build.outputs.build-output }}
 
   package:
     name: Package .geode files
     runs-on: ubuntu-latest
     needs: build
     steps:
-      - name: Download all builds
-        uses: actions/download-artifact@v4
+      - uses: geode-sdk/build-geode-mod/combine@main
+        id: combine
         with:
-          path: out/
+          cli: latest
 
-      - name: Upload all .geode files
-        uses: actions/upload-artifact@v4
+      - uses: actions/upload-artifact@v4
         with:
-          name: Reworked-all
-          path: out/**/*.geode
-          if-no-files-found: warn
+          name: Reworked-Android
+          path: ${{ steps.combine.outputs.build-output }}
 
   release:
     name: Create GitHub Release
@@ -71,7 +66,7 @@ jobs:
       - name: Download packaged .geode
         uses: actions/download-artifact@v4
         with:
-          name: Reworked-all
+          name: Reworked-Android
           path: release/
 
       - name: Create Release
