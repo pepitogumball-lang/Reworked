@@ -54,10 +54,10 @@ public:
     CCMenuItemSpriteExtra* pageLeftBtn = nullptr;
     CCMenuItemSpriteExtra* pageRightBtn = nullptr;
 
-    NineSlice* hoveredBg = nullptr;
-    NineSlice* selectedBg = nullptr;
-    NineSlice* selectedInputBg = nullptr;
-    NineSlice* listBg = nullptr;
+    CCScale9Sprite* hoveredBg = nullptr;
+    CCScale9Sprite* selectedBg = nullptr;
+    CCScale9Sprite* selectedInputBg = nullptr;
+    CCScale9Sprite* listBg = nullptr;
 
     int selectedInput = -1;
     int selectedInputIndex = -1;

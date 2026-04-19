@@ -46,7 +46,7 @@ public:
         CCLabelBMFont* warningLabel = nullptr;
 
         CCSprite* warningSprite = nullptr;
-        NineSlice* tpsBg = nullptr;
+        CCScale9Sprite* tpsBg = nullptr;
 
         CCMenuItemSpriteExtra* FPSLeft = nullptr;
         CCMenuItemSpriteExtra* FPSRight = nullptr;
