@@ -1,4 +1,4 @@
-# Xd-rework
+# Reworked
 
 A rework of [xdBot](https://github.com/Zilko/xdBot) by Zilko, updated for **Geode 5.6.1** and **Geometry Dash 2.2081**.
 

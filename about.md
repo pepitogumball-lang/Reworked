@@ -1,6 +1,6 @@
-# Xd-rework v2.5.0
+# Reworked v2.5.0
 
-<cl>Xd-rework</c> is a feature-rich macro bot designed to be easy for anyone to use; intended for <cg>showcases</c>. Now updated to Geode v5.0.0 for better performance and compatibility.
+<cl>Reworked</c> is a feature-rich macro bot designed to be easy for anyone to use; intended for <cg>showcases</c>. Now updated to Geode v5.0.0 for better performance and compatibility.
 
 # Features
 

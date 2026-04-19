@@ -62,7 +62,7 @@ void Clickbot::initSystem() {
     if (!c.clickGroup) {
         FMOD::ChannelGroup* masterGroup = nullptr;
         c.system->getMasterChannelGroup(&masterGroup);
-        c.system->createChannelGroup("XdRework_Clickbot", &c.clickGroup);
+        c.system->createChannelGroup("Reworked_Clickbot", &c.clickGroup);
         if (c.clickGroup && masterGroup)
             masterGroup->addGroup(c.clickGroup);
     }

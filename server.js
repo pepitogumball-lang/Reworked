@@ -1,6 +1,4 @@
 const http = require('http');
-const fs = require('fs');
-const path = require('path');
 
 const PORT = 5000;
 const HOST = '0.0.0.0';
@@ -10,7 +8,7 @@ const html = `<!DOCTYPE html>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Xd-rework - Geode Mod</title>
+  <title>Reworked - Geode Mod</title>
   <style>
     * { box-sizing: border-box; margin: 0; padding: 0; }
     body {
@@ -82,7 +80,7 @@ const html = `<!DOCTYPE html>
 <body>
   <div class="card">
     <div class="badge">Geode Mod</div>
-    <h1>Xd-rework</h1>
+    <h1>Reworked</h1>
     <p class="sub">A rework of xdBot — fully updated for modern Geode and GD versions.</p>
     <div class="meta">
       <div class="meta-item">Geode <span>v5.6.1</span></div>
@@ -104,7 +102,7 @@ const html = `<!DOCTYPE html>
       <div class="feature">Renderer</div>
       <div class="feature">Autosave</div>
     </div>
-    <a class="link" href="https://github.com/flinger-bit/Xd-rework" target="_blank">View on GitHub →</a>
+    <a class="link" href="https://github.com/pepitogumball-lang/Reworked" target="_blank">View on GitHub →</a>
   </div>
 </body>
 </html>`;
@@ -115,5 +113,5 @@ const server = http.createServer((req, res) => {
 });
 
 server.listen(PORT, HOST, () => {
-  console.log(`Xd-rework project page running at http://${HOST}:${PORT}/`);
+  console.log(`Reworked project page running at http://${HOST}:${PORT}/`);
 });
