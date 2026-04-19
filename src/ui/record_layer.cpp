@@ -238,7 +238,7 @@ void RecordLayer::togglePlaying(CCObject*) {
         g.currentAction = 0;
         g.currentFrameFix = 0;
 
-        g.macro.xdBotMacro = g.macro.botInfo.name == "xdBot";
+        g.macro.xdBotMacro = (g.macro.botInfo.name == "xdBot" || g.macro.botInfo.name == "Reworked");
         
         PlayLayer* pl = PlayLayer::get();
 
@@ -586,7 +586,7 @@ bool RecordLayer::init(float w, float h, const char* bg, cocos2d::CCRect bgRect)
     CCSprite* spriteOn = CCSprite::createWithSpriteFrameName("GJ_checkOn_001.png");
     CCSprite* spriteOff = CCSprite::createWithSpriteFrameName("GJ_checkOff_001.png");
 
-    CCLabelBMFont* versionLabel = CCLabelBMFont::create(("xdBot " + xdBotVersion).c_str(), "chatFont.fnt");
+    CCLabelBMFont* versionLabel = CCLabelBMFont::create(("Reworked " + reworkedVersion).c_str(), "chatFont.fnt");
     versionLabel->setOpacity(63);
     versionLabel->setPosition(ccp(-217, -125));
     versionLabel->setAnchorPoint({ 0, 0.5 });
