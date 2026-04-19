@@ -158,13 +158,17 @@ class $modify(PlayLayer) {
 
             m_player1->m_holdingRight = false;
             m_player1->m_holdingLeft  = false;
-            m_player2->m_holdingRight = false;
-            m_player2->m_holdingLeft  = false;
+            if (m_player2) {
+                m_player2->m_holdingRight = false;
+                m_player2->m_holdingLeft  = false;
+            }
 
             m_player1->m_holdingButtons[2] = false;
             m_player1->m_holdingButtons[3] = false;
-            m_player2->m_holdingButtons[2] = false;
-            m_player2->m_holdingButtons[3] = false;
+            if (m_player2) {
+                m_player2->m_holdingButtons[2] = false;
+                m_player2->m_holdingButtons[3] = false;
+            }
         }
 
         if (!m_levelSettings->m_platformerMode || (!g.mod->getSavedValue<bool>("macro_always_practice_fixes") && g.state != state::recording)) return;
@@ -304,7 +308,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
         if (p1Dead) {
             m_player1->releaseAllButtons();
             if (!dualMode) {
-                m_player2->releaseAllButtons();
+                if (m_player2) m_player2->releaseAllButtons();
                 return;
             }
         }

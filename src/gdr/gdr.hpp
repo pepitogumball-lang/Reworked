@@ -14,7 +14,7 @@ cocos2d::CCPoint dataFromString(std::string dataString);
 
 std::vector<std::string> splitByChar(std::string str, char splitChar);
 
-const std::string xdBotVersion = "v2.4.1";
+const std::string reworkedVersion = "v2.5.0";
 
 namespace gdr {
 
@@ -227,7 +227,7 @@ namespace gdr {
                                         frameFix.p2.rotate = false;
 
                                 } else if (frameFixJson.contains("p1")) {
-                                        if (replay.botInfo.name != "xdBot") rotation = false;
+                                        if (replay.botInfo.name != "xdBot" && replay.botInfo.name != "Reworked") rotation = false;
 
                                         if (frameFixJson["p1"].contains("x"))
                                                 frameFix.p1.pos.x = frameFixJson["p1"]["x"];
@@ -301,7 +301,7 @@ namespace gdr {
                                 frameFixJson["frame"] = frameFix.frame;
                                 frameFixJson["p1"] = p1Json;
 
-                                if (frameFix.p2.pos.y != 0.f)
+                                if (!p2Json.empty())
                                         frameFixJson["p2"] = p2Json;
 
                                 replayJson["frameFixes"].push_back(frameFixJson);

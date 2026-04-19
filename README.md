@@ -24,7 +24,7 @@ A rework of [xdBot](https://github.com/Zilko/xdBot) by Zilko, updated for **Geod
 
 - [Geode SDK](https://geode-sdk.org/) v5.6.1
 - CMake 3.21+
-- C++20 compatible compiler
+- C++23 compatible compiler
 
 ### Local Build
 

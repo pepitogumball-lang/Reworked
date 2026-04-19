@@ -23,7 +23,7 @@ void Macro::recordAction(int frame, int button, bool player2, bool hold) {
 
 void Macro::recordFrameFix(int frame, PlayerObject* p1, PlayerObject* p2) {
     float p1Rotation = p1->getRotation();
-    float p2Rotation = p2->getRotation();
+    float p2Rotation = p2 ? p2->getRotation() : 0.f;
 
     while (p1Rotation < 0 || p1Rotation > 360)
       p1Rotation += p1Rotation < 0 ? 360.f : -360.f;
@@ -31,10 +31,12 @@ void Macro::recordFrameFix(int frame, PlayerObject* p1, PlayerObject* p2) {
     while (p2Rotation < 0 || p2Rotation > 360)
       p2Rotation += p2Rotation < 0 ? 360.f : -360.f;
 
+    cocos2d::CCPoint p2Pos = p2 ? p2->getPosition() : ccp(0.f, 0.f);
+
     Global::get().macro.frameFixes.push_back({
       frame,
       { p1->getPosition(), p1Rotation },
-      { p2->getPosition(), p2Rotation }
+      { p2Pos, p2Rotation }
     });
 }
 
@@ -126,8 +128,8 @@ void Macro::updateInfo(PlayLayer* pl) {
     if (g.macro.author == "")
         g.macro.author = "N/A";
 
-    g.macro.botInfo.name = "xdBot";
-    g.macro.botInfo.version = xdBotVersion;
+    g.macro.botInfo.name = "Reworked";
+    g.macro.botInfo.version = reworkedVersion;
     g.macro.xdBotMacro = true;
 }
 
