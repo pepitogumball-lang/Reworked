@@ -6,7 +6,13 @@ void ClickbotLayer::updateLabels() {
         for (size_t i = 0; i < buttonNames.size(); i++) {
                 matjson::Value data = g.mod->getSavedValue<matjson::Value>(buttonNames[i]);
 
-                ClickSetting settings = matjson::Serialize<ClickSetting>::fromJson(data).unwrap();
+                auto parsed = matjson::Serialize<ClickSetting>::fromJson(data);
+                ClickSetting settings;
+                if (parsed) {
+                        settings = parsed.unwrap();
+                } else {
+                        settings.path = g.mod->getResourcesDir() / fmt::format("default_{}.mp3", buttonNames[i]);
+                }
 
                 std::string filename = settings.path.filename().string();
 
@@ -312,7 +318,16 @@ bool ClickSettingsLayer::init(float w, float h, const char* bg, cocos2d::CCRect 
         m_mainLayer->addChild(menu);
 
         matjson::Value data = Mod::get()->getSavedValue<matjson::Value>(button);
-        settings = matjson::Serialize<ClickSetting>::fromJson(data).unwrap();
+        auto parsed = matjson::Serialize<ClickSetting>::fromJson(data);
+        if (parsed) {
+                settings = parsed.unwrap();
+        } else {
+                settings.path     = Mod::get()->getResourcesDir() / fmt::format("default_{}.mp3", button);
+                settings.volume   = 75;
+                settings.pitch    = 1.f;
+                settings.disabled = false;
+                saveSettings();
+        }
         std::string filename = settings.path.filename().string();
 
         if (!std::filesystem::exists(settings.path)) filename = "N/A";

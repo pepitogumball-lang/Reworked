@@ -15,6 +15,20 @@ $execute {
         g.mod->setSavedValue("clickbot_pitch",     1.f);
     }
 
+    // Initialize per-button defaults if missing or invalid
+    for (const auto& name : buttonNames) {
+        auto existing = g.mod->getSavedValue<matjson::Value>(name);
+        auto parsed = matjson::Serialize<ClickSetting>::fromJson(existing);
+        if (!parsed) {
+            ClickSetting def;
+            def.path     = g.mod->getResourcesDir() / fmt::format("default_{}.mp3", name);
+            def.volume   = 75;
+            def.pitch    = 1.f;
+            def.disabled = false;
+            g.mod->setSavedValue(name, matjson::Serialize<ClickSetting>::toJson(def));
+        }
+    }
+
     g.clickbotEnabled      = g.mod->getSavedValue<bool>("clickbot_enabled");
     g.clickbotOnlyPlaying  = g.mod->getSavedValue<bool>("clickbot_playing_only");
     g.clickbotOnlyHolding  = g.mod->getSavedValue<bool>("clickbot_holding_only");
