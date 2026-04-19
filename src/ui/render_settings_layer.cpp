@@ -1,7 +1,7 @@
 #include "render_settings_layer.hpp"
 #include "record_layer.hpp"
 
-#include <geode/modify/SliderTouchLogic.hpp>
+#include <Geode/modify/SliderTouchLogic.hpp>
 
 class $modify(SliderTouchLogic) {
     bool ccTouchBegan(cocos2d::CCTouch* v1, cocos2d::CCEvent* v2) {

@@ -1,7 +1,7 @@
 #include "../includes.hpp"
 #include "game_ui.hpp"
 
-#include <geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 class $modify(PlayLayer) {
 

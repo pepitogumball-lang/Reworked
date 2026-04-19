@@ -1,10 +1,10 @@
 #include "../includes.hpp"
 
-#include <geode/modify/PauseLayer.hpp>
-#include <geode/modify/CCParticleSystem.hpp>  
-#include <geode/modify/CCDirector.hpp>
-#include <geode/modify/GJBaseGameLayer.hpp>
-#include <geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PauseLayer.hpp>
+#include <Geode/modify/CCParticleSystem.hpp>  
+#include <Geode/modify/CCDirector.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 #ifdef GEODE_IS_WINDOWS
 

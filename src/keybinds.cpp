@@ -8,8 +8,8 @@
 #include "hacks/layout_mode.hpp"
 #include "hacks/show_trajectory.hpp"
 
-#include <geode/modify/CCKeyboardDispatcher.hpp>
-#include <geode/modify/CCTouchDispatcher.hpp>
+#include <Geode/modify/CCKeyboardDispatcher.hpp>
+#include <Geode/modify/CCTouchDispatcher.hpp>
 
 #ifdef GEODE_IS_WINDOWS
 

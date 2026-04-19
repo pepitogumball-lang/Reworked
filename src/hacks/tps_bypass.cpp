@@ -1,5 +1,5 @@
 #include "../includes.hpp"
-#include <geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
 
 class $modify(GJBaseGameLayer) {
 

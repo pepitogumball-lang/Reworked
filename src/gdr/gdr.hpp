@@ -6,7 +6,7 @@
 
 #include "json.hpp"
 
-#include <geode/utils/VersionInfo.hpp>
+#include <Geode/utils/VersionInfo.hpp>
 
 geode::prelude::VersionInfo getVersion(std::vector<std::string> nums);
 

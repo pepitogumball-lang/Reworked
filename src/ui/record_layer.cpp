@@ -10,8 +10,8 @@
 #include "../hacks/coin_finder.hpp"
 #include "../hacks/show_trajectory.hpp"
 
-#include <geode/modify/PauseLayer.hpp>
-#include <geode/utils/web.hpp>
+#include <Geode/modify/PauseLayer.hpp>
+#include <Geode/utils/web.hpp>
 
 const std::vector<std::vector<RecordSetting>> settings {
         {

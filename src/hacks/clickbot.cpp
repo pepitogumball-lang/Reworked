@@ -1,8 +1,8 @@
 #include "../includes.hpp"
 #include "clickbot.hpp"
 
-#include <geode/modify/GJBaseGameLayer.hpp>
-#include <geode/modify/PlayLayer.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 $execute {
     auto& g = Global::get();

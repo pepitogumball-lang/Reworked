@@ -1,6 +1,6 @@
 #pragma once
 
-#include <geode/platform/cplatform.h>
+#include <Geode/platform/cplatform.h>
 
 #ifdef GEODE_IS_WINDOWS
     #ifdef FFMPEG_API_EXPORTING

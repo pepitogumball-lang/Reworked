@@ -1,6 +1,6 @@
 #include "DSPRecorder.hpp"
-#include <geode/binding/FMODAudioEngine.hpp>
-#include <geode/loader/Log.hpp>
+#include <Geode/binding/FMODAudioEngine.hpp>
+#include <Geode/loader/Log.hpp>
 
 using namespace geode::prelude;
 

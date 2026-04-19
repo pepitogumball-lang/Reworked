@@ -2,7 +2,7 @@
 
 #include <vector>
 #include <asp/sync/Mutex.hpp>
-#include <geode/fmod/fmod.hpp>
+#include <Geode/fmod/fmod.hpp>
 
 #ifndef GEODE_IS_IOS
 

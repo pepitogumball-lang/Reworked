@@ -1,5 +1,5 @@
 #include "../includes.hpp"
-#include <geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 class CoinFinderNode : public cocos2d::CCDrawNode {
 

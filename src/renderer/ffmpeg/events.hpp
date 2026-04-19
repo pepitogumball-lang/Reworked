@@ -2,7 +2,7 @@
 
 #include "render_settings.hpp"
 
-#include <geode/loader/Event.hpp>
+#include <Geode/loader/Event.hpp>
 
 namespace ffmpeg::events {
 namespace impl {

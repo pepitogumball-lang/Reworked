@@ -1,13 +1,13 @@
 #include "../includes.hpp"
 #include "../ui/record_layer.hpp"
 
-#include <geode/modify/PlayerObject.hpp>
-#include <geode/modify/PlayLayer.hpp>
-#include <geode/modify/EndLevelLayer.hpp>
-#include <geode/modify/GJGameLevel.hpp>
-#include <geode/modify/CCScheduler.hpp>
-#include <geode/modify/EffectGameObject.hpp>
-#include <geode/modify/GameLevelOptionsLayer.hpp>
+#include <Geode/modify/PlayerObject.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/EndLevelLayer.hpp>
+#include <Geode/modify/GJGameLevel.hpp>
+#include <Geode/modify/CCScheduler.hpp>
+#include <Geode/modify/EffectGameObject.hpp>
+#include <Geode/modify/GameLevelOptionsLayer.hpp>
 
 const std::unordered_set<int> shaderIDs = {2904,2905,2907,2909,2910,2911,2912,2913,2914,2915,2916,2917,2919,2920,2921,2922,2923,2924};
 

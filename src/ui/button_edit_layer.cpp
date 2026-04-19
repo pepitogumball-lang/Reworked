@@ -1,7 +1,7 @@
 #include "button_edit_layer.hpp"
 #include "game_ui.hpp"
 
-#include <geode/modify/FLAlertLayer.hpp>
+#include <Geode/modify/FLAlertLayer.hpp>
 
 $execute{
     auto & g = Global::get();

@@ -3,7 +3,7 @@
 #include "render_settings.hpp"
 #include "export.hpp"
 
-#include <geode/Result.hpp>
+#include <Geode/Result.hpp>
 
 #include <vector>
 #include <string>

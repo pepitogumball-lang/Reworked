@@ -2,7 +2,7 @@
 #include "ui/record_layer.hpp"
 #include "ui/game_ui.hpp"
 
-#include <geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 void Macro::recordAction(int frame, int button, bool player2, bool hold) {
     PlayLayer* pl = PlayLayer::get();

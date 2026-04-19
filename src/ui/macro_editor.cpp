@@ -1,8 +1,8 @@
 #include "macro_editor.hpp"
 #include "record_layer.hpp"
 
-#include <geode/modify/CCEGLView.hpp>
-#include <geode/modify/FLAlertLayer.hpp>
+#include <Geode/modify/CCEGLView.hpp>
+#include <Geode/modify/FLAlertLayer.hpp>
 
 MacroEditLayer* editLayer = nullptr;
 

@@ -1,8 +1,8 @@
 #include "practice_fixes.hpp"
 
-#include <geode/modify/GJBaseGameLayer.hpp>
-#include <geode/modify/CheckpointObject.hpp>
-#include <geode/modify/PlayLayer.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/CheckpointObject.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 class $modify(GJBaseGameLayer) {
 

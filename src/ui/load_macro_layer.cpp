@@ -2,7 +2,7 @@
 #include "autosave_settings_layer.hpp"
 #include "macro_editor.hpp"
 
-#include <geode/modify/CCMenu.hpp>
+#include <Geode/modify/CCMenu.hpp>
 
 class $modify(CCMenu) {
         virtual bool ccTouchBegan(cocos2d::CCTouch* touch, cocos2d::CCEvent* event) {

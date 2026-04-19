@@ -4,9 +4,9 @@
 #include "practice_fixes/practice_fixes.hpp"
 #include "hacks/layout_mode.hpp"
 
-#include <geode/modify/GJBaseGameLayer.hpp>
-#include <geode/modify/PlayLayer.hpp>
-#include <geode/modify/PauseLayer.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PauseLayer.hpp>
 
 $execute {
 

@@ -1,7 +1,7 @@
 #include "ui/record_layer.hpp"
 #include "ui/game_ui.hpp"
 
-#include <geode/modify/CCTextInputNode.hpp>
+#include <Geode/modify/CCTextInputNode.hpp>
 
 #ifdef GEODE_IS_WINDOWS
 #include <geode.custom-keybinds/include/Keybinds.hpp>

@@ -1,8 +1,8 @@
 #include "../includes.hpp"
 #include "record_layer.hpp"
 
-#include <geode/loader/SettingV3.hpp>
-#include <geode/loader/Mod.hpp>
+#include <Geode/loader/SettingV3.hpp>
+#include <Geode/loader/Mod.hpp>
 
 class MyButtonSettingV3 : public SettingV3 {
 public:

@@ -1,7 +1,7 @@
 #include "layout_mode.hpp"
 
-#include <geode/modify/LevelTools.hpp>
-#include <geode/modify/PlayLayer.hpp>
+#include <Geode/modify/LevelTools.hpp>
+#include <Geode/modify/PlayLayer.hpp>
 
 class $modify(LevelTools) {
     static bool verifyLevelIntegrity(gd::string v1, int v2) {

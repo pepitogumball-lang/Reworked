@@ -1,13 +1,13 @@
 #include "show_trajectory.hpp"
 
-#include <geode/modify/PlayLayer.hpp>
-#include <geode/modify/PauseLayer.hpp>
-#include <geode/modify/PlayerObject.hpp>
-#include <geode/modify/GJBaseGameLayer.hpp>
-#include <geode/modify/GameObject.hpp>
-#include <geode/modify/EffectGameObject.hpp>
-#include <geode/modify/HardStreak.hpp>
-#include <geode/modify/CCKeyboardDispatcher.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/PauseLayer.hpp>
+#include <Geode/modify/PlayerObject.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/GameObject.hpp>
+#include <Geode/modify/EffectGameObject.hpp>
+#include <Geode/modify/HardStreak.hpp>
+#include <Geode/modify/CCKeyboardDispatcher.hpp>
 
 ShowTrajectory& t = ShowTrajectory::get();
 

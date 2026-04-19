@@ -1,9 +1,9 @@
 #pragma once
 
-#include <geode/Geode.hpp>
-#include <geode/ui/Popup.hpp>
-#include <geode/ui/GeodeUI.hpp>
-#include <geode/ui/TextInput.hpp>
+#include <Geode/Geode.hpp>
+#include <Geode/ui/Popup.hpp>
+#include <Geode/ui/GeodeUI.hpp>
+#include <Geode/ui/TextInput.hpp>
 
 #include <string>
 #include <thread>

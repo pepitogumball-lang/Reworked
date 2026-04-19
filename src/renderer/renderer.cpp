@@ -5,14 +5,14 @@
 #include "../ui/game_ui.hpp"
 #include "../utils/subprocess.hpp"
 
-#include <geode/modify/FMODAudioEngine.hpp>
-#include <geode/modify/GJBaseGameLayer.hpp>
-#include <geode/modify/EndLevelLayer.hpp>
-#include <geode/modify/PlayLayer.hpp>
-#include <geode/modify/CCScheduler.hpp>
-#include <geode/modify/CCParticleSystemQuad.hpp>
-#include <geode/modify/CCCircleWave.hpp>
-#include <geode/utils/web.hpp>
+#include <Geode/modify/FMODAudioEngine.hpp>
+#include <Geode/modify/GJBaseGameLayer.hpp>
+#include <Geode/modify/EndLevelLayer.hpp>
+#include <Geode/modify/PlayLayer.hpp>
+#include <Geode/modify/CCScheduler.hpp>
+#include <Geode/modify/CCParticleSystemQuad.hpp>
+#include <Geode/modify/CCCircleWave.hpp>
+#include <Geode/utils/web.hpp>
 
 #include <sstream>
 #include <filesystem>
