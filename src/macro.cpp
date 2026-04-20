@@ -20,7 +20,11 @@ void Macro::recordAction(int frame, int button, bool player2, bool hold) {
 
     float speed = g.speedhack;
     if (speed <= 0.01f) speed = 1.f;
-    int normalizedFrame = static_cast<int>(frame / speed);
+
+    int normalizedFrame = static_cast<int>(std::round(
+        g.shOffset + static_cast<float>(frame - g.shRawFrameAtChange) / speed
+    ));
+    if (normalizedFrame < 0) normalizedFrame = 0;
 
     g.macro.inputs.push_back(input(normalizedFrame, button, player2, hold));
 }
@@ -179,6 +183,15 @@ bool Macro::isBroken(const Macro& macro) {
     }
 
     return zeroGaps > static_cast<int>(inputs.size()) / 4;
+}
+
+void Macro::buildFrameMap() {
+    auto& g = Global::get();
+    g.frameMap.clear();
+    g.frameMap.reserve(g.macro.inputs.size());
+
+    for (const auto& inp : g.macro.inputs)
+        g.frameMap[static_cast<int>(inp.frame)].push_back(inp);
 }
 
 void Macro::fixInputs() {
@@ -350,6 +363,12 @@ Macro Macro::XDtoGDR(std::filesystem::path path) {
 
 void Macro::resetVariables() {
     auto& g = Global::get();
+
+    g.shOffset = 0.f;
+    g.shRawFrameAtChange = 0;
+    g.shPrevSpeed = 1.f;
+
+    g.frameMap.clear();
 
     g.ignoreFrame = -1;
     g.ignoreJumpButton = -1;

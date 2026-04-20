@@ -1,15 +1,15 @@
-name: Build Geode Mod
+name: Build Geode Mod (Android)
 
 on:
   workflow_dispatch:
   push:
     branches:
-      - main
+      - "**"
     tags:
       - "v*.*.*"
   pull_request:
     branches:
-      - main
+      - "**"
 
 jobs:
   build:
@@ -29,15 +29,9 @@ jobs:
         uses: geode-sdk/build-geode-mod@main
         id: build
         with:
-          sdk: v5.6.1
+          sdk: given
           target: ${{ matrix.config.target }}
           combine: true
-
-      - name: Upload build artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: ${{ matrix.config.target }}-build
-          path: ${{ steps.build.outputs.build-output }}
 
   package:
     name: Package .geode file
@@ -46,8 +40,6 @@ jobs:
     steps:
       - uses: geode-sdk/build-geode-mod/combine@main
         id: combine
-        with:
-          cli: latest
 
       - uses: actions/upload-artifact@v4
         with:

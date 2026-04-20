@@ -11,6 +11,7 @@
 #include <queue>
 #include <cmath>
 #include <vector>
+#include <unordered_map>
 
 #include "renderer/renderer.hpp"
 #include "macro.hpp"
@@ -161,6 +162,12 @@ public:
     int frameFixesLimit = 240;
     bool frameFixes = false;
     bool inputFixes = false;
+
+    float shOffset = 0.f;
+    int shRawFrameAtChange = 0;
+    float shPrevSpeed = 1.f;
+
+    std::unordered_map<int, std::vector<input>> frameMap;
 
     int currentPage = 0;
     float currentPitch = 1.f;

@@ -141,6 +141,9 @@ class $modify(PlayLayer) {
         g.currentFrameFix = 0;
         g.restart = false;
 
+        if (g.state == state::playing)
+            Macro::buildFrameMap();
+
         if (g.state == state::recording)
             Macro::updateInfo(this);
 
@@ -155,6 +158,11 @@ class $modify(PlayLayer) {
             g.mod->setSavedValue("macro_tps", 240.f);
             g.mod->setSavedValue("macro_tps_enabled", false);
             if (g.layer) static_cast<RecordLayer*>(g.layer)->updateTPS();
+
+            float initSpeed = g.speedhack <= 0.01f ? 1.f : g.speedhack;
+            g.shOffset = 0.f;
+            g.shRawFrameAtChange = frame;
+            g.shPrevSpeed = initSpeed;
 
             PlayerData p1Data = PlayerPracticeFixes::saveData(m_player1);
             PlayerData p2Data = PlayerPracticeFixes::saveData(m_player2);
@@ -327,21 +335,24 @@ class $modify(BGLHook, GJBaseGameLayer) {
 
         m_fields->macroInput = true;
 
-        while (g.currentAction < g.macro.inputs.size() && frame >= g.macro.inputs[g.currentAction].frame) {
-            auto inp = g.macro.inputs[g.currentAction];
+        auto mapIt = g.frameMap.find(frame);
+        if (mapIt != g.frameMap.end()) {
+            for (auto inp : mapIt->second) {
+                if (frame != g.respawnFrame) {
+                    if (Macro::flipControls())
+                        inp.player2 = !inp.player2;
 
-            if (frame != g.respawnFrame) {
-                if (Macro::flipControls())
-                    inp.player2 = !inp.player2;
-
-                bool targetDead = inp.player2 ? p2Dead : p1Dead;
-                if (!targetDead)
-                    GJBaseGameLayer::handleButton(inp.down, inp.button, inp.player2);
+                    bool targetDead = inp.player2 ? p2Dead : p1Dead;
+                    if (!targetDead)
+                        GJBaseGameLayer::handleButton(inp.down, inp.button, inp.player2);
+                }
+                g.safeMode = true;
             }
-
-            g.currentAction++;
-            g.safeMode = true;
         }
+
+        while (g.currentAction < g.macro.inputs.size() &&
+               frame >= static_cast<int>(g.macro.inputs[g.currentAction].frame))
+            g.currentAction++;
 
         g.respawnFrame = -1;
         m_fields->macroInput = false;

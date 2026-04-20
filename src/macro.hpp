@@ -65,6 +65,8 @@ public:
 
     static void fixInputs();
 
+    static void buildFrameMap();
+
     static void normalizeImportedFrames(Macro& macro);
 
     static bool isBroken(const Macro& macro);

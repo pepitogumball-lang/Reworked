@@ -64,6 +64,16 @@ class $modify(CCScheduler) {
                 Global::updatePitch(1.f);
         }
 
+        if (g.state == state::recording && PlayLayer::get()) {
+            if (std::fabs(speedhack - g.shPrevSpeed) > 0.001f) {
+                int rawFrame = Global::getCurrentFrame();
+                float prevSafe = g.shPrevSpeed <= 0.01f ? 1.f : g.shPrevSpeed;
+                g.shOffset += static_cast<float>(rawFrame - g.shRawFrameAtChange) / prevSafe;
+                g.shRawFrameAtChange = rawFrame;
+                g.shPrevSpeed = speedhack <= 0.01f ? 1.f : speedhack;
+            }
+        }
+
         g.speedhack = speedhack;
 
         if (speedhack != 1.f && PlayLayer::get())
