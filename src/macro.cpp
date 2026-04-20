@@ -136,10 +136,23 @@ void Macro::updateInfo(PlayLayer* pl) {
 void Macro::updateTPS() {
     auto& g = Global::get();
 
+    g.tpsEnabled = false;
+    g.tps = 240.f;
+
     g.mod->setSavedValue("macro_tps", g.tps);
     g.mod->setSavedValue("macro_tps_enabled", g.tpsEnabled);
 
     if (g.layer) static_cast<RecordLayer*>(g.layer)->updateTPS();
+}
+
+void Macro::fixInputs() {
+    auto& inputs = Global::get().macro.inputs;
+
+    if (inputs.empty()) return;
+
+    if (!inputs[0].down) {
+        inputs.insert(inputs.begin(), input(0, inputs[0].button, inputs[0].player2, true));
+    }
 }
 
 int Macro::save(std::string author, std::string desc, std::string path, bool json) {
