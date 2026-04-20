@@ -129,8 +129,6 @@ public:
     bool stopPlaying = false;
     bool tpsEnabled = false;
     float tps = 240.f;
-    bool previousTpsEnabled = false;
-    float previousTps = 0.f;
     bool autoclicker = false;
     bool autoclickerP1 = false;
     bool autoclickerP2 = false;
