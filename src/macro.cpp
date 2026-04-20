@@ -136,23 +136,8 @@ void Macro::updateInfo(PlayLayer* pl) {
 void Macro::updateTPS() {
     auto& g = Global::get();
 
-    if (g.state != state::none && !g.macro.inputs.empty()) {
-        g.previousTpsEnabled = g.tpsEnabled;
-        g.previousTps = g.tps;
-
-        float effectiveFps = (g.macro.framerate > 0.f) ? g.macro.framerate : 240.f;
-        g.tpsEnabled = (effectiveFps != 240.f);
-        if (g.tpsEnabled) g.tps = effectiveFps;
-
-        g.mod->setSavedValue("macro_tps", g.tps);
-        g.mod->setSavedValue("macro_tps_enabled", g.tpsEnabled);
-    } else if (g.previousTps != 0.f) {
-        g.tpsEnabled = g.previousTpsEnabled;
-        g.tps = g.previousTps;
-        g.previousTps = 0.f;
-        g.mod->setSavedValue("macro_tps", g.tps);
-        g.mod->setSavedValue("macro_tps_enabled", g.tpsEnabled);
-    }
+    g.mod->setSavedValue("macro_tps", g.tps);
+    g.mod->setSavedValue("macro_tps_enabled", g.tpsEnabled);
 
     if (g.layer) static_cast<RecordLayer*>(g.layer)->updateTPS();
 }
