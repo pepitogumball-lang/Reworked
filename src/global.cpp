@@ -43,7 +43,7 @@ bool Global::hasIncompatibleMods() {
 
   if (Mod* mod = Loader::get()->getLoadedMod("firee.prism")) {
     auto json = mod->getSavedValue<matjson::Value>("values");
-    for (const auto& obj : json.asArray().unwrap()) {
+    for (const auto& obj : json.asArray().unwrapOrDefault()) {
 
       if (obj["name"].asString().unwrapOrDefault() != "TPS Bypass") continue;
 
@@ -108,14 +108,22 @@ bool Global::hasIncompatibleMods() {
     }
 
     for (IncompatibleSetting sett : incompatMod.incompatSettings) {
-      bool value = sett.isSavedValue ? mod->getSavedValue<bool>(sett.ID) : mod->getSettingValue<bool>(sett.ID);
+      bool value;
+      if (sett.isSavedValue) {
+        value = mod->getSavedValue<bool>(sett.ID);
+      } else if (mod->hasSetting(sett.ID)) {
+        value = mod->getSettingValue<bool>(sett.ID);
+      } else {
+        continue;
+      }
 
       if (value != sett.incompatValue) continue;
 
-      if (sett.isModToggle)
+      if (sett.isModToggle) {
         modsToDisable.push_back(modName);
-      else {
-        std::string settName = sett.isSavedValue ? sett.ID : mod->getSetting(sett.ID)->getDisplayName();
+      } else {
+        auto setting = mod->getSetting(sett.ID);
+        std::string settName = (sett.isSavedValue || !setting) ? sett.ID : setting->getDisplayName();
         settingsToDisable.push_back(fmt::format("{} ({})", settName, modName));
       }
 
