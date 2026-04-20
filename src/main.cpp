@@ -55,6 +55,7 @@ class $modify(PlayLayer) {
             Global::toggleSpeedhack();
 
         g.blockOrbRewards = false;
+        g.leftOver = 0.f;
 
         PlayLayer::onQuit();
     }
@@ -117,6 +118,7 @@ class $modify(PlayLayer) {
         PlayLayer::resetLevel();
 
         auto& g = Global::get();
+        g.leftOver = 0.f;
         int frame = Global::getCurrentFrame();
 
         if (!m_isPracticeMode)
