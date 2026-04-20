@@ -149,6 +149,38 @@ void Macro::updateTPS() {
     if (g.layer) static_cast<RecordLayer*>(g.layer)->updateTPS();
 }
 
+void Macro::normalizeImportedFrames(Macro& macro) {
+    float fr = macro.framerate;
+
+    if (fr > 0.f && std::abs(fr - 240.f) > 0.5f) {
+        float scale = 240.f / fr;
+
+        for (auto& inp : macro.inputs)
+            inp.frame = static_cast<int>(std::round(inp.frame * scale));
+
+        for (auto& fix : macro.frameFixes)
+            fix.frame = static_cast<int>(std::round(fix.frame * scale));
+
+        macro.framerate = 240.f;
+
+        log::info("normalizeImportedFrames: rescaled {} inputs from {}fps to 240fps (scale={:.4f})",
+                  macro.inputs.size(), fr, scale);
+    }
+}
+
+bool Macro::isBroken(const Macro& macro) {
+    const auto& inputs = macro.inputs;
+    if (inputs.size() < 4) return false;
+
+    int zeroGaps = 0;
+    for (size_t i = 1; i < inputs.size(); i++) {
+        if (inputs[i].frame <= inputs[i - 1].frame)
+            zeroGaps++;
+    }
+
+    return zeroGaps > static_cast<int>(inputs.size()) / 4;
+}
+
 void Macro::fixInputs() {
     auto& inputs = Global::get().macro.inputs;
 

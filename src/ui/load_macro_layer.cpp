@@ -174,6 +174,8 @@ void LoadMacroLayer::onImportMacro(CCObject*) {
                                         tempMacro = Macro::importData(macroData);
                                 }
 
+                                Macro::normalizeImportedFrames(tempMacro);
+
                                 bool xdMacro = path.extension() == ".xd";
                                 int iterations = 0;
                                 std::string name = path.filename().string().substr(0, path.filename().string().find_last_of('.'));
@@ -670,6 +672,7 @@ void MacroCell::handleLoad() {
                 f.close();
 
                 newMacro = Macro::importData(macroData);
+                Macro::normalizeImportedFrames(newMacro);
         }
 
         if (isMerge) {
@@ -696,7 +699,10 @@ void MacroCell::handleLoad() {
         g.restart = true;
         g.macro.canChangeFPS = false;
 
-    g.macro.xdBotMacro = g.macro.botInfo.name == "xdBot";
+        g.macro.xdBotMacro = g.macro.botInfo.name == "xdBot";
+
+        if (Macro::isBroken(g.macro))
+            Notification::create("Warning: macro may have speedhack recording artifacts", NotificationIcon::Warning, 4.f)->show();
 
         loadLayer->removeFromParentAndCleanup(true);
 

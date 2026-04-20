@@ -65,6 +65,10 @@ public:
 
     static void fixInputs();
 
+    static void normalizeImportedFrames(Macro& macro);
+
+    static bool isBroken(const Macro& macro);
+
     static void resetVariables();
 
     static void resetState(bool cp = false);
