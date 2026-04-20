@@ -73,10 +73,13 @@ bool ClickbotLayer::init(float w, float h, const char* bg, cocos2d::CCRect bgRec
         menu->addChild(lbl);
         labels.push_back(lbl);
 
-        CCSprite* spr = CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png");
-        spr->setScale(0.375f);
+        auto makeSpr = []() {
+                CCSprite* s = CCSprite::createWithSpriteFrameName("GJ_optionsBtn_001.png");
+                s->setScale(0.375f);
+                return s;
+        };
 
-        CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(ClickbotLayer::openClickSettings));
+        CCMenuItemSpriteExtra* btn = CCMenuItemSpriteExtra::create(makeSpr(), this, menu_selector(ClickbotLayer::openClickSettings));
         btn->setPosition(ccp(-94, 35));
         btn->setID("hold_click");
         menu->addChild(btn);
@@ -101,7 +104,7 @@ bool ClickbotLayer::init(float w, float h, const char* bg, cocos2d::CCRect bgRec
         menu->addChild(lbl);
         labels.push_back(lbl);
 
-        btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(ClickbotLayer::openClickSettings));
+        btn = CCMenuItemSpriteExtra::create(makeSpr(), this, menu_selector(ClickbotLayer::openClickSettings));
         btn->setPosition(ccp(27, 35));
         btn->setID("release_click");
         menu->addChild(btn);
@@ -126,7 +129,7 @@ bool ClickbotLayer::init(float w, float h, const char* bg, cocos2d::CCRect bgRec
         menu->addChild(lbl);
         labels.push_back(lbl);
 
-        btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(ClickbotLayer::openClickSettings));
+        btn = CCMenuItemSpriteExtra::create(makeSpr(), this, menu_selector(ClickbotLayer::openClickSettings));
         btn->setPosition(ccp(-94, -22));
         btn->setID("hold_left");
         menu->addChild(btn);
@@ -151,7 +154,7 @@ bool ClickbotLayer::init(float w, float h, const char* bg, cocos2d::CCRect bgRec
         menu->addChild(lbl);
         labels.push_back(lbl);
 
-        btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(ClickbotLayer::openClickSettings));
+        btn = CCMenuItemSpriteExtra::create(makeSpr(), this, menu_selector(ClickbotLayer::openClickSettings));
         btn->setPosition(ccp(27, -22));
         btn->setID("release_left");
         menu->addChild(btn);
@@ -176,7 +179,7 @@ bool ClickbotLayer::init(float w, float h, const char* bg, cocos2d::CCRect bgRec
         menu->addChild(lbl);
         labels.push_back(lbl);
 
-        btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(ClickbotLayer::openClickSettings));
+        btn = CCMenuItemSpriteExtra::create(makeSpr(), this, menu_selector(ClickbotLayer::openClickSettings));
         btn->setPosition(ccp(-94, -79));
         btn->setID("hold_right");
         menu->addChild(btn);
@@ -201,7 +204,7 @@ bool ClickbotLayer::init(float w, float h, const char* bg, cocos2d::CCRect bgRec
         menu->addChild(lbl);
         labels.push_back(lbl);
 
-        btn = CCMenuItemSpriteExtra::create(spr, this, menu_selector(ClickbotLayer::openClickSettings));
+        btn = CCMenuItemSpriteExtra::create(makeSpr(), this, menu_selector(ClickbotLayer::openClickSettings));
         btn->setPosition(ccp(27, -79));
         btn->setID("release_right");
         menu->addChild(btn);

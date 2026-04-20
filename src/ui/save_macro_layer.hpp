@@ -27,7 +27,17 @@ class SaveMacroLayer : public geode::Popup, public TextInputDelegate {
 
         auto& g = Global::get();
         std::filesystem::path macrosFolder = g.mod->getSettingValue<std::filesystem::path>("macros_folder");
-        std::string defaultPath = (macrosFolder / "macro").string();
+
+        std::string levelBase = "macro";
+        if (PlayLayer* pl = PlayLayer::get()) {
+            if (pl->m_level && !pl->m_level->m_levelName.empty()) {
+                levelBase = pl->m_level->m_levelName;
+                static const std::string invalid = "/\\:*?\"<>|";
+                for (char& c : levelBase)
+                    if (invalid.find(c) != std::string::npos) c = '_';
+            }
+        }
+        std::string defaultPath = (macrosFolder / levelBase).string();
 
         addLabel("Author:", mh - 55);
         authorInput = TextInput::create(180, "Author");

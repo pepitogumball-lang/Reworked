@@ -136,19 +136,23 @@ void Macro::updateInfo(PlayLayer* pl) {
 void Macro::updateTPS() {
     auto& g = Global::get();
 
-    const bool playingMacro = (g.state != state::none && !g.macro.inputs.empty());
-
-    if (playingMacro) {
+    if (g.state != state::none && !g.macro.inputs.empty()) {
+        // Save user TPS settings once when playback/recording starts
         if (g.previousTps == 0.f) {
             g.previousTpsEnabled = g.tpsEnabled;
             g.previousTps = g.tps > 0.f ? g.tps : 240.f;
         }
 
-        if (g.macro.framerate > 0.f && g.macro.framerate != 240.f) {
-            g.tpsEnabled = true;
-            g.tps = g.macro.framerate;
-        }
+        // Force TPS to match macro's recorded framerate.
+        // Treat 0 as 240 (macros recorded without TPS bypass).
+        float macroFps = (g.macro.framerate > 0.f) ? g.macro.framerate : 240.f;
+        g.tpsEnabled = (macroFps != 240.f);
+        if (g.tpsEnabled) g.tps = macroFps;
+
+        g.mod->setSavedValue("macro_tps", g.tps);
+        g.mod->setSavedValue("macro_tps_enabled", g.tpsEnabled);
     } else if (g.previousTps != 0.f) {
+        // Restore user's original TPS settings after playback ends
         g.tpsEnabled = g.previousTpsEnabled;
         g.tps = g.previousTps;
         g.previousTps = 0.f;
