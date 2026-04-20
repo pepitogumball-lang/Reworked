@@ -439,15 +439,18 @@ class $modify(BGLHook, GJBaseGameLayer) {
         if (g.state != state::recording)
             return GJBaseGameLayer::handleButton(hold, button, player2);
 
-        if (g.inputFixes)
+        bool inTwoPlayer = m_levelSettings->m_twoPlayerMode;
+        bool isGhostInput = player2 && !inTwoPlayer;
+
+        if (g.inputFixes && !isGhostInput)
             g.macro.recordFrameFix(frame, m_player1, m_player2);
 
         GJBaseGameLayer::handleButton(hold, button, player2);
 
-        if (!m_levelSettings->m_twoPlayerMode)
+        if (!inTwoPlayer)
             player2 = false;
 
-        if (!g.ignoreRecordAction && !g.creatingTrajectory && !m_player1->m_isDead) {
+        if (!g.ignoreRecordAction && !g.creatingTrajectory && !m_player1->m_isDead && !isGhostInput) {
             g.macro.recordAction(frame, button, player2, hold);
             if (g.p2mirror && m_gameState.m_isDualMode)
                 g.macro.recordAction(frame, button, !player2,

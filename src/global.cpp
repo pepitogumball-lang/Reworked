@@ -34,7 +34,6 @@ struct IncompatibleMod {
 const std::vector<IncompatibleMod> incompatibleMods {
   { "syzzi.click_between_frames", true, { {"soft-toggle", false, true }, { "actual-delta", true } } },
   { "alphalaneous.click_after_frames", true, { { "soft-toggle", false, true } } },
-  { "thesillydoggo.qolmod", true, { { "tps-bypass_enabled", true, false, true } } },
   // { "zmx.cbf-lite", false, {  } }
 };
 
