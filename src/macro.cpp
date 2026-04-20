@@ -18,7 +18,11 @@ void Macro::recordAction(int frame, int button, bool player2, bool hold) {
     if (Macro::flipControls())
       player2 = !player2;
 
-    g.macro.inputs.push_back(input(frame, button, player2, hold));
+    float speed = g.speedhack;
+    if (speed <= 0.01f) speed = 1.f;
+    int normalizedFrame = static_cast<int>(frame / speed);
+
+    g.macro.inputs.push_back(input(normalizedFrame, button, player2, hold));
 }
 
 void Macro::recordFrameFix(int frame, PlayerObject* p1, PlayerObject* p2) {

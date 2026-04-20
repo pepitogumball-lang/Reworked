@@ -117,6 +117,7 @@ public:
     bool coinFinder = false;
     bool frameStepper = false;
     bool speedhackEnabled = false;
+    float speedhack = 1.f;
     bool speedhackAudio = false;
     bool seedEnabled = false;
     bool clickbotEnabled = false;
