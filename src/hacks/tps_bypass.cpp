@@ -6,9 +6,18 @@ class $modify(GJBaseGameLayer) {
     void update(float dt) {
         auto& g = Global::get();
 
-        if (!g.tpsEnabled) return GJBaseGameLayer::update(dt);
-        if (Global::getTPS() == 240.f) return GJBaseGameLayer::update(dt);
-        if (!PlayLayer::get()) return GJBaseGameLayer::update(dt);
+        if (!g.tpsEnabled) {
+            if (g.leftOver != 0.f) g.leftOver = 0.f;
+            return GJBaseGameLayer::update(dt);
+        }
+        if (Global::getTPS() == 240.f) {
+            if (g.leftOver != 0.f) g.leftOver = 0.f;
+            return GJBaseGameLayer::update(dt);
+        }
+        if (!PlayLayer::get()) {
+            if (g.leftOver != 0.f) g.leftOver = 0.f;
+            return GJBaseGameLayer::update(dt);
+        }
 
         float newDt = 1.f / Global::getTPS();
 
