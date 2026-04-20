@@ -1,0 +1,164 @@
+{
+  "colorScheme": "light",
+  "fonts": [
+    {
+      "family": "Helvetica Neue",
+      "role": "body"
+    },
+    {
+      "family": "Arial",
+      "role": "body"
+    },
+    {
+      "family": "Sohne",
+      "role": "heading"
+    },
+    {
+      "family": "Helvetica",
+      "role": "body"
+    },
+    {
+      "family": "Roboto",
+      "role": "body"
+    }
+  ],
+  "colors": {
+    "primary": "#1A8917",
+    "secondary": "#156D12",
+    "accent": "#1A8917",
+    "background": "#EBEBEB",
+    "textPrimary": "#242424",
+    "link": "#1A73E8"
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": "Helvetica Neue",
+      "heading": "Sohne"
+    },
+    "fontStacks": {
+      "heading": [
+        "Sohne",
+        "Helvetica Neue",
+        "Helvetica",
+        "Arial",
+        "sans-serif"
+      ],
+      "body": [
+        "Times New Roman"
+      ],
+      "paragraph": [
+        "Sohne",
+        "Helvetica Neue",
+        "Helvetica",
+        "Arial",
+        "sans-serif"
+      ]
+    },
+    "fontSizes": {
+      "h1": "42px",
+      "h2": "24px",
+      "body": "14px"
+    }
+  },
+  "spacing": {
+    "baseUnit": 4,
+    "borderRadius": "4px"
+  },
+  "components": {
+    "input": {
+      "background": "#F2F2F2",
+      "textColor": "#000000",
+      "borderColor": null,
+      "borderRadius": "0px",
+      "borderRadiusCorners": {
+        "topLeft": "0px",
+        "topRight": "0px",
+        "bottomRight": "0px",
+        "bottomLeft": "0px"
+      },
+      "shadow": "none"
+    },
+    "buttonPrimary": {
+      "background": "#1A8917",
+      "textColor": "#FFFFFF",
+      "borderColor": "#1A8917",
+      "borderRadius": "1287px",
+      "borderRadiusCorners": {
+        "topLeft": "1287px",
+        "topRight": "1287px",
+        "bottomRight": "1287px",
+        "bottomLeft": "1287px"
+      },
+      "shadow": "none"
+    },
+    "buttonSecondary": {
+      "background": "transparent",
+      "textColor": "#000000",
+      "borderColor": "#242424",
+      "borderRadius": "19px",
+      "borderRadiusCorners": {
+        "topLeft": "19px",
+        "topRight": "19px",
+        "bottomRight": "19px",
+        "bottomLeft": "19px"
+      },
+      "shadow": "none"
+    }
+  },
+  "images": {
+    "logo": "File saved at: attached_assets/logo.svg",
+    "favicon": "File saved at: attached_assets/favicon.png",
+    "ogImage": "File saved at: attached_assets/ogImage.png",
+    "logoHref": "File saved at: attached_assets/logoHref.html",
+    "logoAlt": "Medium Logo"
+  },
+  "__llm_logo_reasoning": {
+    "selectedIndex": 0,
+    "reasoning": "Selected #0 because it is the Medium logo, visible, and links to the homepage, aligning with the brand inferred from the URL and page title.",
+    "confidence": 0.9,
+    "source": "llm"
+  },
+  "__llm_button_reasoning": {
+    "primary": {
+      "index": 2,
+      "text": "Sign up",
+      "reasoning": "Button #2 with text 'Sign up' uses the vibrant brand color #1A8917, making it the most prominent CTA."
+    },
+    "secondary": {
+      "index": 6,
+      "text": "Follow",
+      "reasoning": "Button #6 with text 'Follow' has a transparent background, providing a clear contrast to the primary button's vibrant color."
+    },
+    "confidence": 0.95
+  },
+  "personality": {
+    "tone": "professional",
+    "energy": "medium",
+    "targetAudience": "tech professionals"
+  },
+  "designSystem": {
+    "framework": "custom",
+    "componentLibrary": ""
+  },
+  "confidence": {
+    "buttons": 0.95,
+    "colors": 0.9,
+    "overall": 0.925
+  },
+  "__llm_metadata": {
+    "logoSelection": {
+      "llmCalled": true,
+      "llmSucceeded": true,
+      "finalSource": "llm",
+      "rawLogoSelection": {
+        "selectedLogoIndex": 0,
+        "selectedLogoReasoning": "Selected #0 because it is the Medium logo, visible, and links to the homepage, aligning with the brand inferred from the URL and page title.",
+        "confidence": 0.9
+      }
+    },
+    "buttonClassification": {
+      "llmCalled": true,
+      "llmSucceeded": true
+    }
+  }
+}

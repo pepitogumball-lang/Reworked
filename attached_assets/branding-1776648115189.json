@@ -1,0 +1,105 @@
+{
+  "colorScheme": "dark",
+  "fonts": [
+    {
+      "family": "Open Sans",
+      "role": "body"
+    },
+    {
+      "family": "Varela Round",
+      "role": "unknown"
+    }
+  ],
+  "colors": {
+    "primary": "#FFFFFF",
+    "accent": "#FFFFFF",
+    "background": "#272727",
+    "textPrimary": "#272727",
+    "link": "#FFFFFF"
+  },
+  "typography": {
+    "fontFamilies": {
+      "primary": "Open Sans",
+      "heading": "Open Sans"
+    },
+    "fontStacks": {
+      "heading": [
+        "Varela Round",
+        "sans-serif"
+      ],
+      "body": [
+        "Times New Roman"
+      ],
+      "paragraph": [
+        "Open Sans",
+        "sans-serif"
+      ]
+    },
+    "fontSizes": {
+      "h1": "48px",
+      "h2": "48px",
+      "body": "16px"
+    }
+  },
+  "spacing": {
+    "baseUnit": 4,
+    "borderRadius": "4px"
+  },
+  "components": {
+    "input": {
+      "background": "transparent",
+      "textColor": "#EEEEEE",
+      "borderColor": null,
+      "borderRadius": "0px",
+      "borderRadiusCorners": {
+        "topLeft": "0px",
+        "topRight": "0px",
+        "bottomRight": "0px",
+        "bottomLeft": "0px"
+      },
+      "shadow": "none"
+    }
+  },
+  "images": {
+    "logo": "File saved at: attached_assets/logo.png",
+    "favicon": "File saved at: attached_assets/favicon.ico",
+    "ogImage": "/icon.png",
+    "logoHref": "File saved at: attached_assets/logoHref.html"
+  },
+  "__llm_logo_reasoning": {
+    "selectedIndex": 0,
+    "reasoning": "Selected #0 because it is the only visible logo in the header, links to the homepage, and matches the favicon domain, indicating it represents the Geode brand.",
+    "confidence": 0.9,
+    "source": "llm"
+  },
+  "personality": {
+    "tone": "professional",
+    "energy": "medium",
+    "targetAudience": "developers"
+  },
+  "designSystem": {
+    "framework": "custom",
+    "componentLibrary": ""
+  },
+  "confidence": {
+    "buttons": 0,
+    "colors": 0.9,
+    "overall": 0.45
+  },
+  "__llm_metadata": {
+    "logoSelection": {
+      "llmCalled": true,
+      "llmSucceeded": true,
+      "finalSource": "llm",
+      "rawLogoSelection": {
+        "selectedLogoIndex": 0,
+        "selectedLogoReasoning": "Selected #0 because it is the only visible logo in the header, links to the homepage, and matches the favicon domain, indicating it represents the Geode brand.",
+        "confidence": 0.9
+      }
+    },
+    "buttonClassification": {
+      "llmCalled": false,
+      "llmSucceeded": false
+    }
+  }
+}
