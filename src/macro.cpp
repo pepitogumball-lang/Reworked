@@ -364,10 +364,6 @@ Macro Macro::XDtoGDR(std::filesystem::path path) {
 void Macro::resetVariables() {
     auto& g = Global::get();
 
-    g.shOffset = 0.f;
-    g.shRawFrameAtChange = 0;
-    g.shPrevSpeed = 1.f;
-
     g.frameMap.clear();
 
     g.ignoreFrame = -1;
