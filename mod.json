@@ -10,14 +10,6 @@
   "name": "Reworked",
   "developer": "flinger-bit",
   "description": "A feature-rich macro bot reworked from xdBot — supports recording, playback, renderer, clickbot, and more.",
-  "dependencies": [
-    {
-      "id": "geode.custom-keybinds",
-      "version": ">=1.6.0",
-      "platforms": ["win"],
-      "importance": "required"
-    }
-  ],
   "settings": {
     "button-setting": {
       "type": "custom:button",
