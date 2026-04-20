@@ -63,6 +63,8 @@ public:
 
     static Macro XDtoGDR(std::filesystem::path path);
 
+    static void fixInputs();
+
     static void resetVariables();
 
     static void resetState(bool cp = false);
