@@ -43,15 +43,17 @@ bool Global::hasIncompatibleMods() {
 
   if (Mod* mod = Loader::get()->getLoadedMod("firee.prism")) {
     auto json = mod->getSavedValue<matjson::Value>("values");
-    for (const auto& obj : json.asArray().unwrapOrDefault()) {
+    if (json.isArray()) {
+      for (const auto& obj : json.asArray().unwrap()) {
 
-      if (obj["name"].asString().unwrapOrDefault() != "TPS Bypass") continue;
+        if (obj["name"].asString().unwrapOrDefault() != "TPS Bypass") continue;
 
-      if (obj["value"].asInt().unwrapOrDefault() != 240)
-        settingsToDisable.push_back("<cr>TPS Bypass (Prism Menu)</c>");
+        if (obj["value"].asInt().unwrapOrDefault() != 240)
+          settingsToDisable.push_back("<cr>TPS Bypass (Prism Menu)</c>");
 
-      break;
+        break;
 
+      }
     }
   }
 
