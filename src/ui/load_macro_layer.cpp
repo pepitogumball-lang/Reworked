@@ -659,6 +659,12 @@ void MacroCell::handleLoad() {
                 if (isMerge)
                         g.macro = oldMacro;
         }
+        else if (path.extension() == ".json" && Macro::loadJson(path)) {
+                // New reworked-macro JSON format - loadJson already populates g.macro
+                newMacro = g.macro;
+                if (isMerge)
+                        g.macro = oldMacro;
+        }
         else {
                 std::ifstream f(path.string(), std::ios::binary);
 
