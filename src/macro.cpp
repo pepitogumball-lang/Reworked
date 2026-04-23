@@ -21,6 +21,13 @@ void Macro::recordAction(int frame, int button, bool player2, bool hold) {
     float speed = g.speedhack;
     if (speed <= 0.01f) speed = 1.f;
 
+    // FIX: Si shRawFrameAtChange quedo mayor que el frame actual (estado corrupto),
+    // lo reseteamos para evitar frames negativos o absurdamente grandes.
+    if (g.shRawFrameAtChange > frame) {
+        g.shRawFrameAtChange = frame;
+        g.shOffset = static_cast<float>(frame);
+    }
+
     int normalizedFrame = static_cast<int>(std::round(
         g.shOffset + static_cast<float>(frame - g.shRawFrameAtChange) / speed
     ));
@@ -104,7 +111,7 @@ void Macro::tryAutosave(GJGameLevel* level, CheckpointObject* cp) {
     std::string levelname = sanitizeName(level->m_levelName);
     std::filesystem::path path = autoSavesPath / fmt::format("autosave_{}_{}", levelname, g.currentSession);
     std::error_code ec;
-    std::filesystem::remove(path.string() + ".gdr", ec); // Remove previous save
+    std::filesystem::remove(path.string() + ".gdr", ec);
     if (ec) log::warn("Failed to remove previous autosave");
 
     autoSave(level, g.currentSession);
@@ -190,8 +197,17 @@ void Macro::buildFrameMap() {
     g.frameMap.clear();
     g.frameMap.reserve(g.macro.inputs.size());
 
-    for (const auto& inp : g.macro.inputs)
+    // FIX: Filtrar frames absurdamente grandes (mas de 10 minutos a 240fps = 144000 frames).
+    // Estos frames corruptos causaban que el juego hiciera speedrun hasta ese frame al reproducir.
+    constexpr int MAX_REASONABLE_FRAME = 240 * 60 * 10; // 144000
+
+    for (const auto& inp : g.macro.inputs) {
+        if (static_cast<int>(inp.frame) > MAX_REASONABLE_FRAME) {
+            log::warn("buildFrameMap: skipping corrupt frame {} (exceeds max {})", inp.frame, MAX_REASONABLE_FRAME);
+            continue;
+        }
         g.frameMap[static_cast<int>(inp.frame)].push_back(inp);
+    }
 }
 
 void Macro::fixInputs() {
