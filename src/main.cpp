@@ -401,7 +401,27 @@ class $modify(BGLHook, GJBaseGameLayer) {
 
     void handleButton(bool hold, int button, bool player2) {
         auto& g = Global::get();
+        int frame = Global::getCurrentFrame();
 
+        // 1. RECORDING: Catch physical input before any filters
+        if (g.state == state::recording) {
+            bool inTwoPlayer = m_levelSettings->m_twoPlayerMode;
+            bool isGhostInput = player2 && !inTwoPlayer;
+            bool actualPlayer2 = inTwoPlayer ? player2 : false;
+
+            if (!g.ignoreRecordAction && !g.creatingTrajectory && !isGhostInput) {
+                g.macro.recordAction(frame, button, actualPlayer2, hold);
+                
+                if (g.p2mirror && m_gameState.m_isDualMode) {
+                    bool mirroredHold = g.mod->getSavedValue<bool>("p2_input_mirror_inverted") ? !hold : hold;
+                    g.macro.recordAction(frame, button, !actualPlayer2, mirroredHold);
+                }
+            }
+            if (g.inputFixes && !isGhostInput)
+                g.macro.recordFrameFix(frame, m_player1, m_player2);
+        }
+
+        // 2. MIRROR LOGIC
         if (g.p2mirror && m_gameState.m_isDualMode && !g.autoclicker) {
             GJBaseGameLayer::handleButton(
                 g.mod->getSavedValue<bool>("p2_input_mirror_inverted") ? !hold : hold,
@@ -409,6 +429,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
             );
         }
 
+        // 3. STATE FILTERS
         if (g.state == state::none)
             return GJBaseGameLayer::handleButton(hold, button, player2);
 
@@ -418,10 +439,11 @@ class $modify(BGLHook, GJBaseGameLayer) {
             else
                 return GJBaseGameLayer::handleButton(hold, button, player2);
         }
-        else if (g.ignoreFrame != -1 && hold)
-            return;
-
-        int frame = Global::getCurrentFrame();
+        
+        if (g.ignoreFrame != -1 && hold) {
+            if (frame <= g.ignoreFrame) return;
+            else g.ignoreFrame = -1;
+        }
 
         if (frame >= 10 && hold)
             Global::hasIncompatibleMods();
@@ -436,26 +458,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
             return;
         }
 
-        if (g.state != state::recording)
-            return GJBaseGameLayer::handleButton(hold, button, player2);
-
-        bool inTwoPlayer = m_levelSettings->m_twoPlayerMode;
-        bool isGhostInput = player2 && !inTwoPlayer;
-
-        if (g.inputFixes && !isGhostInput)
-            g.macro.recordFrameFix(frame, m_player1, m_player2);
-
         GJBaseGameLayer::handleButton(hold, button, player2);
-
-        if (!inTwoPlayer)
-            player2 = false;
-
-        if (!g.ignoreRecordAction && !g.creatingTrajectory && !isGhostInput) {
-            g.macro.recordAction(frame, button, player2, hold);
-            if (g.p2mirror && m_gameState.m_isDualMode)
-                g.macro.recordAction(frame, button, !player2,
-                    g.mod->getSavedValue<bool>("p2_input_mirror_inverted") ? !hold : hold);
-        }
     }
 };
 
@@ -503,4 +506,3 @@ class $modify(PauseLayer) {
     }
 
 };
-
