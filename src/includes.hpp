@@ -12,6 +12,8 @@
 #include <cmath>
 #include <vector>
 #include <unordered_map>
+#include <map>
+#include <algorithm>
 
 #include "renderer/renderer.hpp"
 #include "input.hpp"
@@ -175,4 +177,5 @@ public:
     uintptr_t latestSeed = 0;
     float leftOver = 0.f;
 };
+
 
