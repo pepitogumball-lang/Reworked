@@ -223,6 +223,24 @@ void Macro::fixInputs() {
 int Macro::save(std::string author, std::string desc, std::string path, bool json) {
     auto& g = Global::get();
 
+    // FIX: Si todos los inputs tienen frame=0 (normalizacion corrupta), la macro
+    // no es valida. Limpiar entradas duplicadas en frame 0 y revisar si queda algo util.
+    if (!g.macro.inputs.empty()) {
+        // Eliminar inputs con frame negativo (no deberian existir pero por si acaso)
+        g.macro.inputs.erase(
+            std::remove_if(g.macro.inputs.begin(), g.macro.inputs.end(),
+                [](const input& inp) { return static_cast<int>(inp.frame) < 0; }),
+            g.macro.inputs.end()
+        );
+        // Si todos los inputs quedaron en frame 0, es una grabacion corrupta
+        bool allZero = std::all_of(g.macro.inputs.begin(), g.macro.inputs.end(),
+            [](const input& inp) { return inp.frame == 0; });
+        if (allZero) {
+            log::warn("Macro::save: all inputs have frame=0, recording was corrupt (speedhack normalization failed)");
+            g.macro.inputs.clear();
+        }
+    }
+
     if (g.macro.inputs.empty()) return 31;
 
     std::string extension = json ? ".gdr.json" : ".gdr";
