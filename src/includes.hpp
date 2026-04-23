@@ -49,6 +49,11 @@ const std::string buttonIDs[6] = {
         return nullptr; \
     }
 
+
+#include <Geode/binding/PlayLayer.hpp>
+#include <Geode/binding/PauseLayer.hpp>
+#include <Geode/binding/GJBaseGameLayer.hpp>
+#include <Geode/binding/FLAlertLayer.hpp>
 class Global {
 
     Global() {}
