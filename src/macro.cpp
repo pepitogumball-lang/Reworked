@@ -33,7 +33,22 @@ void Macro::recordAction(int frame, int button, bool player2, bool hold) {
     ));
     if (normalizedFrame < 0) normalizedFrame = 0;
 
-    g.macro.inputs.push_back(input(normalizedFrame, button, player2, hold));
+    // Sub-frame ordering: if multiple inputs land on the same frame
+    // (common on Android/tablet with fast taps where press+release arrive
+    // within the same physics frame), assign an incrementing subFrameIndex
+    // so playback can reproduce them in their original order instead of
+    // collapsing them into a single simultaneous event.
+    uint8_t sfx = 0;
+    if (!g.macro.inputs.empty()) {
+        const auto& last = g.macro.inputs.back();
+        if (static_cast<int>(last.frame) == normalizedFrame) {
+            sfx = static_cast<uint8_t>(
+                std::min(static_cast<int>(last.subFrameIndex) + 1, 255)
+            );
+        }
+    }
+
+    g.macro.inputs.push_back(input(normalizedFrame, button, player2, hold, sfx));
 }
 
 void Macro::recordFrameFix(int frame, PlayerObject* p1, PlayerObject* p2) {
@@ -208,6 +223,18 @@ void Macro::buildFrameMap() {
         }
         g.frameMap[static_cast<int>(inp.frame)].push_back(inp);
     }
+
+    // Sort each frame's inputs by subFrameIndex so multi-input frames (e.g. fast taps
+    // on Android where press+release arrive in the same physics frame) replay in the
+    // correct original order.
+    for (auto& [frame, inputs] : g.frameMap) {
+        if (inputs.size() > 1) {
+            std::stable_sort(inputs.begin(), inputs.end(),
+                [](const input& a, const input& b) {
+                    return a.subFrameIndex < b.subFrameIndex;
+                });
+        }
+    }
 }
 
 void Macro::fixInputs() {
@@ -239,7 +266,8 @@ int Macro::saveJson(std::string author, std::string desc, std::string path) {
             static_cast<int>(inp.frame),
             inp.button,
             inp.player2,
-            inp.down
+            inp.down,
+            inp.subFrameIndex  // preserve intra-frame order for Android fast taps
         );
     }
 
@@ -318,7 +346,7 @@ bool Macro::loadJson(std::filesystem::path path) {
     g.macro.botInfo.version = reworkedVersion;
 
     for (const auto& e : mf.inputs) {
-        g.macro.inputs.emplace_back(e.frame, e.button, e.player2, e.down);
+        g.macro.inputs.emplace_back(e.frame, e.button, e.player2, e.down, e.subFrameIndex);
     }
 
     log::info("Macro::loadJson: loaded {} events from {}", g.macro.inputs.size(), path.string());
