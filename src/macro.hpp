@@ -49,7 +49,15 @@ public:
 
     static void recordFrameFix(int frame, PlayerObject* p1, PlayerObject* p2);
 
+    // Save as legacy .gdr / .gdr.json (msgpack or json, GDR format)
     static int save(std::string author, std::string desc, std::string path, bool json = false);
+
+    // Save as new .json format (reworked-macro, explicit events, human-readable)
+    // This is the new default and preferred format.
+    static int saveJson(std::string author, std::string desc, std::string path);
+
+    // Load .json (reworked-macro format). Returns true on success.
+    static bool loadJson(std::filesystem::path path);
 
     static void autoSave(GJGameLevel* level, int number);
 
