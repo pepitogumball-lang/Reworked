@@ -220,26 +220,113 @@ void Macro::fixInputs() {
     }
 }
 
-int Macro::save(std::string author, std::string desc, std::string path, bool json) {
+int Macro::saveJson(std::string author, std::string desc, std::string path) {
     auto& g = Global::get();
 
-    // FIX: Si todos los inputs tienen frame=0 (normalizacion corrupta), la macro
-    // no es valida. Limpiar entradas duplicadas en frame 0 y revisar si queda algo util.
-    if (!g.macro.inputs.empty()) {
-        // Eliminar inputs con frame negativo (no deberian existir pero por si acaso)
-        g.macro.inputs.erase(
-            std::remove_if(g.macro.inputs.begin(), g.macro.inputs.end(),
-                [](const input& inp) { return static_cast<int>(inp.frame) < 0; }),
-            g.macro.inputs.end()
+    if (g.macro.inputs.empty()) return 31;
+
+    // Build rw_macro::MacroFile from current inputs
+    rw_macro::MacroFile mf;
+    mf.author      = author;
+    mf.description = desc;
+    mf.framerate   = g.macro.framerate > 0.f ? g.macro.framerate : 240.f;
+    mf.duration    = (mf.framerate > 0.f && !g.macro.inputs.empty())
+                     ? g.macro.inputs.back().frame / mf.framerate
+                     : 0.f;
+
+    for (const auto& inp : g.macro.inputs) {
+        mf.inputs.emplace_back(
+            static_cast<int>(inp.frame),
+            inp.button,
+            inp.player2,
+            inp.down
         );
-        // Si todos los inputs quedaron en frame 0, es una grabacion corrupta
-        bool allZero = std::all_of(g.macro.inputs.begin(), g.macro.inputs.end(),
-            [](const input& inp) { return inp.frame == 0; });
-        if (allZero) {
-            log::warn("Macro::save: all inputs have frame=0, recording was corrupt (speedhack normalization failed)");
-            g.macro.inputs.clear();
-        }
     }
+
+    // Validate: must have at least one down event
+    if (!mf.isValid()) {
+        log::warn("Macro::saveJson: no valid down events - recording appears corrupt");
+        return 31;
+    }
+
+    std::string extension = ".json";
+    int iterations = 0;
+    while (std::filesystem::exists(path + extension)) {
+        iterations++;
+        if (iterations > 1) {
+            int length = 3 + (int)std::to_string(iterations - 1).length();
+            path.erase(path.length() - length, length);
+        }
+        path += fmt::format(" ({})", iterations);
+    }
+    path += extension;
+
+    log::debug("Macro::saveJson: saving to {}", path);
+
+    {
+        std::error_code ec;
+        std::filesystem::create_directories(std::filesystem::path(path).parent_path(), ec);
+        if (ec) log::warn("saveJson: create_directories failed: {}", ec.message());
+    }
+
+    std::ofstream f;
+#ifdef GEODE_IS_WINDOWS
+    std::wstring widePath = Utils::widen(path);
+    if (widePath != L"Widen Error")
+        f.open(widePath, std::ios::binary);
+    if (!f)
+#endif
+        f.open(path, std::ios::binary);
+
+    if (!f) return 20;
+
+    auto data = mf.exportData();
+    f.write(reinterpret_cast<const char*>(data.data()), data.size());
+
+    if (!f) { f.close(); return 21; }
+    f.close();
+    return 0;
+}
+
+bool Macro::loadJson(std::filesystem::path path) {
+    std::ifstream f;
+#ifdef GEODE_IS_WINDOWS
+    {
+        std::wstring wp = Utils::widen(path.string());
+        if (wp != L"Widen Error") f.open(wp, std::ios::binary);
+    }
+    if (!f.is_open())
+#endif
+        f.open(path, std::ios::binary);
+
+    if (!f.is_open()) return false;
+
+    std::vector<uint8_t> data((std::istreambuf_iterator<char>(f)),
+                               std::istreambuf_iterator<char>());
+    f.close();
+
+    rw_macro::MacroFile mf = rw_macro::MacroFile::importData(data);
+    if (mf.empty()) return false;
+
+    auto& g = Global::get();
+    g.macro = Macro();
+    g.macro.framerate   = mf.framerate;
+    g.macro.duration    = mf.duration;
+    g.macro.author      = mf.author;
+    g.macro.description = mf.description;
+    g.macro.botInfo.name    = "Reworked";
+    g.macro.botInfo.version = reworkedVersion;
+
+    for (const auto& e : mf.inputs) {
+        g.macro.inputs.emplace_back(e.frame, e.button, e.player2, e.down);
+    }
+
+    log::info("Macro::loadJson: loaded {} events from {}", g.macro.inputs.size(), path.string());
+    return true;
+}
+
+int Macro::save(std::string author, std::string desc, std::string path, bool json) {
+    auto& g = Global::get();
 
     if (g.macro.inputs.empty()) return 31;
 
