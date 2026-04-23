@@ -166,11 +166,8 @@ void Macro::updateInfo(PlayLayer* pl) {
 void Macro::updateTPS() {
     auto& g = Global::get();
 
-    g.tpsEnabled = false;
-    g.tps = 240.f;
-
-    g.mod->setSavedValue("macro_tps", g.tps);
-    g.mod->setSavedValue("macro_tps_enabled", g.tpsEnabled);
+    g.tpsEnabled = g.mod->getSavedValue<bool>("macro_tps_enabled");
+    g.tps = g.mod->getSavedValue<double>("macro_tps");
 
     if (g.layer) static_cast<RecordLayer*>(g.layer)->updateTPS();
 }
@@ -600,3 +597,4 @@ bool Macro::shouldStep() {
 
     return false;
 }
+
