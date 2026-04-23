@@ -482,6 +482,21 @@ Macro Macro::XDtoGDR(std::filesystem::path path) {
 
 }
 
+void Macro::removeInputsAfter(int frame) {
+    auto& g = Global::get();
+    // Eclipse model: truncate inputs after `frame`, keep everything before.
+    g.macro.inputs.erase(
+        std::remove_if(g.macro.inputs.begin(), g.macro.inputs.end(),
+            [frame](const input& inp) { return static_cast<int>(inp.frame) > frame; }),
+        g.macro.inputs.end()
+    );
+    g.macro.frameFixes.erase(
+        std::remove_if(g.macro.frameFixes.begin(), g.macro.frameFixes.end(),
+            [frame](const gdr::FrameFix& ff) { return ff.frame > frame; }),
+        g.macro.frameFixes.end()
+    );
+}
+
 void Macro::resetVariables() {
     auto& g = Global::get();
 
