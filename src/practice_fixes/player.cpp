@@ -252,9 +252,9 @@ PlayerData PlayerPracticeFixes::saveData(PlayerObject* player) {
     data.m_isOutOfBounds = player->m_isOutOfBounds;
     data.m_fallStartY = player->m_fallStartY;
     data.m_disablePlayerSqueeze = player->m_disablePlayerSqueeze;
-    data.m_robotHasRun3 = player->m_robotHasRun3;
-    data.m_robotHasRun2 = player->m_robotHasRun2;
-    data.m_item20 = player->m_item20;
+    // data.m_robotHasRun3 = player->m_robotHasRun3;
+    // data.m_robotHasRun2 = player->m_robotHasRun2;
+    // data.m_item20 = player->m_item20;
     data.m_ignoreDamage = player->m_ignoreDamage;
     data.m_enable22Changes = player->m_enable22Changes;
     return data;
@@ -507,9 +507,9 @@ void PlayerPracticeFixes::applyData(PlayerObject* player, PlayerData data, bool 
     player->m_isOutOfBounds = data.m_isOutOfBounds;
     player->m_fallStartY = data.m_fallStartY;
     player->m_disablePlayerSqueeze = data.m_disablePlayerSqueeze;
-    player->m_robotHasRun3 = data.m_robotHasRun3;
-    player->m_robotHasRun2 = data.m_robotHasRun2;
-    player->m_item20 = data.m_item20;
+    // player->m_robotHasRun3 = data.m_robotHasRun3;
+    // player->m_robotHasRun2 = data.m_robotHasRun2;
+    // player->m_item20 = data.m_item20;
     player->m_ignoreDamage = data.m_ignoreDamage;
     player->m_enable22Changes = data.m_enable22Changes;
 
