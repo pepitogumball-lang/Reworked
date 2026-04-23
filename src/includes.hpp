@@ -50,6 +50,10 @@ const std::string buttonIDs[6] = {
     }
 
 
+#include <Geode/binding/EditorUI.hpp>
+#include <Geode/binding/LevelEditorLayer.hpp>
+#include <Geode/binding/CCTextInputNode.hpp>
+#include <Geode/binding/ButtonSprite.hpp>
 #include <Geode/binding/PlayLayer.hpp>
 #include <Geode/binding/PauseLayer.hpp>
 #include <Geode/binding/GJBaseGameLayer.hpp>
