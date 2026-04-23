@@ -126,8 +126,13 @@ class $modify(PlayLayer) {
 
     #endif
 
-    if (g.state == state::recording)
+    if (g.state == state::recording) {
+      // Eclipse model: truncate inputs recorded AFTER this checkpoint frame
+      // instead of clearing the whole macro. Preserves everything up to
+      // the checkpoint so the player can retry cleanly from that point.
+      Macro::removeInputsAfter(frame);
       InputPracticeFixes::applyFixes(this, p1Data, p2Data, frame);
+    }
 
     PlayLayer::loadFromCheckpoint(cp);
 
