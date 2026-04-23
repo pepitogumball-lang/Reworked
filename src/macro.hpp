@@ -1,6 +1,7 @@
 #pragma once
 
-#include "includes.hpp"
+#include <Geode/Geode.hpp>
+#include "input.hpp"
 #include "gdr/gdr.hpp"
 #include "utils/utils.hpp"
 
@@ -343,4 +344,5 @@ struct CheckpointData {
     uintptr_t seed;
     int previousFrame;
 };
+
 
