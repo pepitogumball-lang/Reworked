@@ -204,7 +204,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
         bool macroInput = false;
         bool p1J = false, p1L = false, p1R = false;
         bool p2J = false, p2L = false, p2R = false;
-    };
+    };;
 
     void processCommands(float dt, bool isHalfTick, bool isLastTick) {
         auto& g = Global::get();
@@ -249,14 +249,30 @@ class $modify(BGLHook, GJBaseGameLayer) {
         int frame = Global::getCurrentFrame();
         g.previousFrame = frame;
 
-        // Reset polling states on level restart
         if (g.restart) {
             m_fields->p1J = m_fields->p1L = m_fields->p1R = false;
             m_fields->p2J = m_fields->p2L = m_fields->p2R = false;
         }
 
-        // --- ANDROID ROBUST RECORDING (POLLING) ---
-        if (g.state == state::recording && !g.ignoreRecordAction) {
+        if (g.macro.xdBotMacro && g.restart && !m_levelEndAnimationStarted) {
+            if ((m_levelSettings->m_platformerMode && g.state != state::none) || g.renderer.recording || g.renderer.recordingAudio)
+                return pl->resetLevelFromStart();
+            else
+                return pl->resetLevel();
+        }
+
+        if (g.state == state::recording)
+            handleRecording(frame);
+
+        if (g.state == state::playing)
+            handlePlaying(Global::getCurrentFrame());
+    }
+
+    void handleRecording(int frame) {
+        auto& g = Global::get();
+
+        // --- ANDROID POLLING ENGINE ---
+        if (!g.ignoreRecordAction && !g.creatingTrajectory) {
             auto recordInput = [&](PlayerObject* p, bool p2, int btn, bool& lastState) {
                 if (!p) return;
                 bool currentState = p->m_holdingButtons[btn];
@@ -281,42 +297,138 @@ class $modify(BGLHook, GJBaseGameLayer) {
             }
         }
 
-        if (g.macro.xdBotMacro && g.restart && !m_levelEndAnimationStarted) {
-            g.restart = false;
-            g.macro.xdBotPlaying = false;
-            g.macro.xdBotMacro = false;
-            g.macro.xdBotPos = 0;
-            g.macro.xdBotFrame = 0;
+        if (g.ignoreFrame != -1) {
+            if (g.ignoreFrame < frame) g.ignoreFrame = -1;
+        }
 
-            if (g.macro.p1Inputs.empty()) {
-                g.macro.xdBotMacro = false;
-            } else {
-                g.macro.xdBotMacro = true;
-                g.macro.xdBotPlaying = true;
+        bool twoPlayers = m_levelSettings->m_twoPlayerMode;
+
+        if (g.delayedFrameInput[0] == frame) {
+            g.delayedFrameInput[0] = -1;
+            GJBaseGameLayer::handleButton(true, 1, true);
+        }
+
+        if (g.delayedFrameInput[1] == frame) {
+            g.delayedFrameInput[1] = -1;
+            GJBaseGameLayer::handleButton(true, 1, false);
+        }
+
+        if (frame > g.ignoreJumpButton && g.ignoreJumpButton != -1)
+            g.ignoreJumpButton = -1;
+
+        for (int x = 0; x < 2; x++) {
+            if (g.delayedFrameReleaseMain[x] == frame) {
+                bool player2 = x == 0;
+                g.delayedFrameReleaseMain[x] = -1;
+                GJBaseGameLayer::handleButton(false, 1, twoPlayers ? player2 : false);
+            }
+
+            if (!m_levelSettings->m_platformerMode) continue;
+
+            for (int y = 0; y < 2; y++) {
+                if (g.delayedFrameRelease[x][y] == frame) {
+                    int button = y == 0 ? 2 : 3;
+                    bool player2 = x == 0;
+                    g.delayedFrameRelease[x][y] = -1;
+                    GJBaseGameLayer::handleButton(false, button, player2);
+                }
             }
         }
 
-        if (g.state != state::playing)
+        if (!g.frameFixes || g.macro.inputs.empty()) return;
+
+        if (!g.macro.frameFixes.empty())
+            if (1.f / Global::getTPS() * (frame - g.macro.frameFixes.back().frame) < 1.f / g.frameFixesLimit)
+                return;
+
+        g.macro.recordFrameFix(frame, m_player1, m_player2);
+    }
+
+    void handlePlaying(int frame) {
+        auto& g = Global::get();
+        if (m_levelEndAnimationStarted) return;
+
+        bool p1Dead = m_player1->m_isDead;
+        bool p2Dead = m_player2 && m_player2->m_isDead;
+        bool dualMode = m_gameState.m_isDualMode;
+
+        if (p1Dead) {
+            m_player1->releaseAllButtons();
+            if (!dualMode) {
+                if (m_player2) m_player2->releaseAllButtons();
+                return;
+            }
+        }
+
+        if (p2Dead && dualMode)
+            m_player2->releaseAllButtons();
+
+        if (p1Dead && p2Dead)
             return;
 
-        if (g.macro.xdBotMacro && g.macro.xdBotPlaying) {
-            while (g.macro.xdBotPos < g.macro.p1Inputs.size() && g.macro.p1Inputs[g.macro.xdBotPos].frame <= frame) {
-                auto& inp = g.macro.p1Inputs[g.macro.xdBotPos];
-                if (inp.frame == frame) {
-                    m_fields->macroInput = true;
-                    handleButton(inp.down, inp.button, inp.player2);
-                    m_fields->macroInput = false;
+        m_fields->macroInput = true;
+
+        auto mapIt = g.frameMap.find(frame);
+        if (mapIt != g.frameMap.end()) {
+            for (auto inp : mapIt->second) {
+                if (frame != g.respawnFrame) {
+                    if (Macro::flipControls())
+                        inp.player2 = !inp.player2;
+
+                    bool targetDead = inp.player2 ? p2Dead : p1Dead;
+                    if (!targetDead)
+                        GJBaseGameLayer::handleButton(inp.down, inp.button, inp.player2);
                 }
-                g.macro.xdBotPos++;
+                g.safeMode = true;
             }
-        } else {
-            for (auto& inp : g.macro.inputs) {
-                if (inp.frame == frame) {
-                    m_fields->macroInput = true;
-                    handleButton(inp.down, inp.button, inp.player2);
-                    m_fields->macroInput = false;
+        }
+
+        while (g.currentAction < g.macro.inputs.size() &&
+               frame >= static_cast<int>(g.macro.inputs[g.currentAction].frame))
+            g.currentAction++;
+
+        g.respawnFrame = -1;
+        m_fields->macroInput = false;
+
+        if (g.currentAction == g.macro.inputs.size()) {
+            if (g.stopPlaying) {
+                Macro::togglePlaying();
+                Macro::resetState(true);
+                return;
+            }
+        }
+
+        if ((!g.frameFixes && !g.inputFixes) || !PlayLayer::get()) return;
+
+        while (g.currentFrameFix < g.macro.frameFixes.size() && frame >= g.macro.frameFixes[g.currentFrameFix].frame) {
+            auto& fix = g.macro.frameFixes[g.currentFrameFix];
+
+            PlayerObject* p1 = m_player1;
+            PlayerObject* p2 = m_player2;
+
+            if (!p1Dead && (fix.p1.pos.x != 0.f || fix.p1.pos.y != 0.f)) {
+                cocos2d::CCPoint curPos = p1->getPosition();
+                float dist = std::hypot(fix.p1.pos.x - curPos.x, fix.p1.pos.y - curPos.y);
+                if (dist < 300.f)
+                    p1->setPosition(fix.p1.pos);
+            }
+
+            if (fix.p1.rotate && fix.p1.rotation != 0.f && !p1Dead)
+                p1->setRotation(fix.p1.rotation);
+
+            if (dualMode && !p2Dead && p2) {
+                if (fix.p2.pos.x != 0.f || fix.p2.pos.y != 0.f) {
+                    cocos2d::CCPoint curPos = p2->getPosition();
+                    float dist = std::hypot(fix.p2.pos.x - curPos.x, fix.p2.pos.y - curPos.y);
+                    if (dist < 300.f)
+                        p2->setPosition(fix.p2.pos);
                 }
+
+                if (fix.p2.rotate && fix.p2.rotation != 0.f)
+                    p2->setRotation(fix.p2.rotation);
             }
+
+            g.currentFrameFix++;
         }
     }
 
@@ -324,6 +436,9 @@ class $modify(BGLHook, GJBaseGameLayer) {
         auto& g = Global::get();
         int frame = Global::getCurrentFrame();
 
+        
+
+        // 2. MIRROR LOGIC
         if (g.p2mirror && m_gameState.m_isDualMode && !g.autoclicker) {
             GJBaseGameLayer::handleButton(
                 g.mod->getSavedValue<bool>("p2_input_mirror_inverted") ? !hold : hold,
@@ -331,6 +446,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
             );
         }
 
+        // 3. STATE FILTERS
         if (g.state == state::none)
             return GJBaseGameLayer::handleButton(hold, button, player2);
 
