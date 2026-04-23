@@ -1,6 +1,6 @@
 #pragma once
 
-#include "../includes.hpp"
+#include <Geode/Geode.hpp>
 
 enum AudioMode {
     Off = 0,
@@ -143,3 +143,4 @@ public:
 };
 
 #endif
+
