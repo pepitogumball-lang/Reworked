@@ -450,7 +450,7 @@ class $modify(BGLHook, GJBaseGameLayer) {
         if (!inTwoPlayer)
             player2 = false;
 
-        if (!g.ignoreRecordAction && !g.creatingTrajectory && !m_player1->m_isDead && !isGhostInput) {
+        if (!g.ignoreRecordAction && !g.creatingTrajectory && !isGhostInput) {
             g.macro.recordAction(frame, button, player2, hold);
             if (g.p2mirror && m_gameState.m_isDualMode)
                 g.macro.recordAction(frame, button, !player2,
