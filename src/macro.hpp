@@ -358,3 +358,4 @@ struct CheckpointData {
     uintptr_t seed;
     int previousFrame;
 };
+
