@@ -33,6 +33,11 @@ void Macro::recordAction(int frame, int button, bool player2, bool hold) {
     ));
     if (normalizedFrame < 0) normalizedFrame = 0;
 
+    // Protection against massive frame 0 issues (Android focus)
+    if (normalizedFrame == 0 && frame > 5) {
+        normalizedFrame = frame;
+    }
+
     // Sub-frame ordering: if multiple inputs land on the same frame
     // (common on Android/tablet with fast taps where press+release arrive
     // within the same physics frame), assign an incrementing subFrameIndex
