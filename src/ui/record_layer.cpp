@@ -208,6 +208,18 @@ void RecordLayer::toggleRecording(CCObject*) {
         g.currentFrameFix = 0;
         g.restart = true;
 
+        // FIX: Inicializar el speedhack offset aqui mismo al empezar a grabar.
+        // Antes esto solo ocurria dentro de resetLevel() bajo una condicion de checkpoints,
+        // dejando shRawFrameAtChange con un valor viejo de sesiones anteriores y produciendo
+        // frames normalizados absurdamente grandes (ej: frame 350,000,000) o todos en 0.
+        {
+            int currentFrame = Global::getCurrentFrame();
+            float initSpeed = g.speedhack <= 0.01f ? 1.f : g.speedhack;
+            g.shOffset = 0.f;
+            g.shRawFrameAtChange = currentFrame;
+            g.shPrevSpeed = initSpeed;
+        }
+
         PlayLayer* pl = PlayLayer::get();
         if (pl) {
             if (!pl->m_isPaused)
