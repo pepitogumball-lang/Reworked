@@ -82,12 +82,21 @@ class SaveMacroLayer : public geode::Popup, public TextInputDelegate {
             return;
         }
 
-        int result = Macro::save(author, desc, path);
+        // Use new JSON format (.json) as default.
+        // Falls back to legacy .gdr only if JSON save fails unexpectedly.
+        int result = Macro::saveJson(author, desc, path);
         if (result == 0) {
-            FLAlertLayer::create("Saved", "Macro saved successfully!", "OK")->show();
+            FLAlertLayer::create("Saved", "Macro saved! (.json)", "OK")->show();
             keyBackClicked();
+        } else if (result == 31) {
+            FLAlertLayer::create("Error",
+                "Nothing to save — the recording has no valid inputs.\n"
+                "Make sure you press a button during the recording.",
+                "OK")->show();
         } else {
-            FLAlertLayer::create("Error", ("Failed to save macro. Code: " + std::to_string(result)).c_str(), "OK")->show();
+            FLAlertLayer::create("Error",
+                ("Failed to save macro. Code: " + std::to_string(result)).c_str(),
+                "OK")->show();
         }
     }
 
