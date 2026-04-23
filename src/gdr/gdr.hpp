@@ -54,16 +54,20 @@ namespace rw_macro {
     using namespace nlohmann;
 
     struct MacroEvent {
-        int    frame   = 0;
-        int    button  = 1;
-        bool   player2 = false;
-        bool   down    = true;
+        int    frame          = 0;
+        int    button         = 1;
+        bool   player2        = false;
+        bool   down           = true;
+        uint8_t subFrameIndex = 0;  // order within same frame (for fast taps on touch devices)
 
         MacroEvent() = default;
-        MacroEvent(int f, int btn, bool p2, bool dn)
-            : frame(f), button(btn), player2(p2), down(dn) {}
+        MacroEvent(int f, int btn, bool p2, bool dn, uint8_t sfx = 0)
+            : frame(f), button(btn), player2(p2), down(dn), subFrameIndex(sfx) {}
 
-        bool operator<(const MacroEvent& o) const { return frame < o.frame; }
+        bool operator<(const MacroEvent& o) const {
+            if (frame != o.frame) return frame < o.frame;
+            return subFrameIndex < o.subFrameIndex;
+        }
     };
 
     struct MacroFile {
@@ -87,12 +91,16 @@ namespace rw_macro {
             j["inputs"]      = json::array();
 
             for (const auto& e : inputs) {
-                j["inputs"].push_back({
+                json ev = {
                     {"frame",   e.frame},
                     {"button",  e.button},
                     {"player2", e.player2},
                     {"down",    e.down}
-                });
+                };
+                // Only write subFrameIndex when non-zero to keep small file size
+                if (e.subFrameIndex > 0)
+                    ev["sfx"] = e.subFrameIndex;
+                j["inputs"].push_back(ev);
             }
 
             std::string s = j.dump(2); // pretty-print with 2-space indent
@@ -118,10 +126,11 @@ namespace rw_macro {
                 for (const auto& item : j["inputs"]) {
                     if (!item.contains("frame")) continue;
                     MacroEvent e;
-                    e.frame   = item["frame"].get<int>();
-                    e.button  = item.value("button",  1);
-                    e.player2 = item.value("player2", false);
-                    e.down    = item.value("down",    true);
+                    e.frame          = item["frame"].get<int>();
+                    e.button         = item.value("button",  1);
+                    e.player2        = item.value("player2", false);
+                    e.down           = item.value("down",    true);
+                    e.subFrameIndex  = item.value("sfx",     (uint8_t)0);
                     mf.inputs.push_back(e);
                 }
             }
@@ -191,14 +200,20 @@ namespace gdr {
 		int button;
 		bool player2;
 		bool down;
+		// Sub-frame ordering index: when multiple inputs share the same frame
+		// (e.g. a fast tap on Android where press+release land in the same physics frame),
+		// this index preserves their original order so playback executes them correctly.
+		// 0 = first input on this frame, 1 = second, etc.
+		// Not serialized in legacy .gdr format (ignored on load = 0).
+		uint8_t subFrameIndex = 0;
 
 		inline virtual void parseExtension(json::object_t obj) {}
 		inline virtual json::object_t saveExtension() const {
 			return {};
 		}
 
-		inline Input(int frame, int button, bool player2, bool down)
-			: frame(frame), button(button), player2(player2), down(down) {}
+		inline Input(int frame, int button, bool player2, bool down, uint8_t subFrameIndex = 0)
+			: frame(frame), button(button), player2(player2), down(down), subFrameIndex(subFrameIndex) {}
 
 
 		inline static Input hold(int frame, int button, bool player2 = false) {
@@ -209,8 +224,10 @@ namespace gdr {
 			return Input(frame, button, player2, false);
 		}
 
+		// Sort by frame first, then by subFrameIndex to preserve intra-frame order.
 		inline bool operator<(Input const& other) const {
-			return frame < other.frame;
+			if (frame != other.frame) return frame < other.frame;
+			return subFrameIndex < other.subFrameIndex;
 		}
 	};
 
@@ -314,10 +331,13 @@ namespace gdr {
 				if (!inputJson.contains("frame")) continue;
 				if (inputJson["frame"].is_null()) continue;
 
-				input.frame = inputJson["frame"].get<int>() + offset;
-				input.button = inputJson["btn"];
+				input.frame   = inputJson["frame"].get<int>() + offset;
+				input.button  = inputJson["btn"];
 				input.player2 = inputJson["2p"];
-				input.down = inputJson["down"];
+				input.down    = inputJson["down"];
+				// Load subFrameIndex if present (new format); default 0 for legacy files.
+				if (inputJson.contains("sfx") && !inputJson["sfx"].is_null())
+					input.subFrameIndex = inputJson["sfx"].get<uint8_t>();
 				input.parseExtension(inputJson.get<json::object_t>());
 
 				replay.inputs.push_back(input);
@@ -399,9 +419,12 @@ namespace gdr {
 			for (InputType const& input : inputs) {
 				json inputJson = input.saveExtension();
 				inputJson["frame"] = input.frame;
-				inputJson["btn"] = input.button;
-				inputJson["2p"] = input.player2;
-				inputJson["down"] = input.down;
+				inputJson["btn"]   = input.button;
+				inputJson["2p"]    = input.player2;
+				inputJson["down"]  = input.down;
+				// Only write subFrameIndex when non-zero to keep legacy file size small.
+				if (input.subFrameIndex > 0)
+					inputJson["sfx"] = input.subFrameIndex;
 
 				replayJson["inputs"].push_back(inputJson);
 			}
