@@ -147,16 +147,6 @@ class $modify(PlayLayer) {
         if (g.state == state::recording)
             Macro::updateInfo(this);
 
-        // FIX: Siempre resetear el speedhack offset al reiniciar mientras se graba.
-        // Antes esto solo ocurria cuando no habia checkpoints, dejando shRawFrameAtChange
-        // con un valor del intento anterior y causando frames absurdamente grandes.
-        if (g.state == state::recording) {
-            float initSpeed = g.speedhack <= 0.01f ? 1.f : g.speedhack;
-            g.shOffset = 0.f;
-            g.shRawFrameAtChange = frame;
-            g.shPrevSpeed = initSpeed;
-        }
-
         if ((!m_isPracticeMode || frame <= 1 || g.checkpoints.empty()) && g.state == state::recording) {
             g.macro.inputs.clear();
             g.macro.frameFixes.clear();
@@ -168,6 +158,11 @@ class $modify(PlayLayer) {
             g.mod->setSavedValue("macro_tps", 240.f);
             g.mod->setSavedValue("macro_tps_enabled", false);
             if (g.layer) static_cast<RecordLayer*>(g.layer)->updateTPS();
+
+            float initSpeed = g.speedhack <= 0.01f ? 1.f : g.speedhack;
+            g.shOffset = 0.f;
+            g.shRawFrameAtChange = frame;
+            g.shPrevSpeed = initSpeed;
 
             PlayerData p1Data = PlayerPracticeFixes::saveData(m_player1);
             PlayerData p2Data = PlayerPracticeFixes::saveData(m_player2);
