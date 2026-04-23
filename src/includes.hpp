@@ -167,8 +167,6 @@ public:
     int shRawFrameAtChange = 0;
     float shPrevSpeed = 1.f;
 
-    std::unordered_map<int, std::vector<input>> frameMap;
-
     int currentPage = 0;
     float currentPitch = 1.f;
     uintptr_t latestSeed = 0;
