@@ -79,6 +79,10 @@ public:
 
     static bool isBroken(const Macro& macro);
 
+    // Eclipse-style: remove inputs recorded after `frame`, keeping everything before.
+    // Called when loading a checkpoint during recording so the macro stays coherent.
+    static void removeInputsAfter(int frame);
+
     static void resetVariables();
 
     static void resetState(bool cp = false);
